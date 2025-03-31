@@ -158,14 +158,17 @@ namespace Veterinari_di_italia.Migrations
                     b.Property<string>("ProprietarioAnimaleId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("TipoId")
+                    b.Property<string>("ProprietarioId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TipologiaId")
                         .HasColumnType("int");
 
                     b.HasKey("IdAnimale");
 
                     b.HasIndex("ProprietarioAnimaleId");
 
-                    b.HasIndex("TipoId");
+                    b.HasIndex("TipologiaId");
 
                     b.ToTable("AnagraficaAnimales");
                 });
@@ -496,7 +499,7 @@ namespace Veterinari_di_italia.Migrations
 
                     b.HasOne("Veterinari_di_italia.Models.TipologiaAnimale", "Tipo")
                         .WithMany("AnagraficaAnimale")
-                        .HasForeignKey("TipoId")
+                        .HasForeignKey("TipologiaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

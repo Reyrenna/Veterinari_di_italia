@@ -201,11 +201,12 @@ namespace Veterinari_di_italia.Migrations
                     IdAnimale = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataRegistrazione = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Nome = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    TipoId = table.Column<int>(type: "int", nullable: false),
+                    TipologiaId = table.Column<int>(type: "int", nullable: false),
                     Colore = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DataDiNascita = table.Column<DateOnly>(type: "date", nullable: false),
                     PresenzaMicrochip = table.Column<bool>(type: "bit", nullable: false),
                     NumeroMicroChip = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProprietarioId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProprietarioAnimaleId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -217,8 +218,8 @@ namespace Veterinari_di_italia.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_AnagraficaAnimales_TipologiaAnimales_TipoId",
-                        column: x => x.TipoId,
+                        name: "FK_AnagraficaAnimales_TipologiaAnimales_TipologiaId",
+                        column: x => x.TipologiaId,
                         principalTable: "TipologiaAnimales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -328,9 +329,9 @@ namespace Veterinari_di_italia.Migrations
                 column: "ProprietarioAnimaleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnagraficaAnimales_TipoId",
+                name: "IX_AnagraficaAnimales_TipologiaId",
                 table: "AnagraficaAnimales",
-                column: "TipoId");
+                column: "TipologiaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

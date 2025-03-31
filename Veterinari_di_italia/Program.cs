@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Veterinari_di_italia.Data;
 using Veterinari_di_italia.Models;
+using Veterinari_di_italia.Services;
 using Veterinari_di_italia.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -90,6 +91,8 @@ builder
 builder.Services.AddScoped<UserManager<ApplicationUser>>();
 builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<ApplicationRole>>();
+
+builder.Services.AddScoped<AnagraficaAnimaleService>();
 
 var app = builder.Build();
 
