@@ -1,0 +1,6 @@
+@Veterinari_di_italia_HostAddress = http://localhost:5219
+
+GET {{Veterinari_di_italia_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
