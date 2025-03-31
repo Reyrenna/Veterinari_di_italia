@@ -1,4 +1,5 @@
-﻿using Veterinari_di_italia.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Veterinari_di_italia.Data;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.Models;
 
@@ -30,6 +31,39 @@ namespace Veterinari_di_italia.Services
             try
             {
                 _context.AnagraficaAnimales.Add(newAnagrafica);
+
+                return await TrySaveAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> EditAnagraficaAsync(
+            AnagraficaAnimale anagrafica,
+            string anagraficaId
+        )
+        {
+            try
+            {
+                var anagraficaFound = await _context.AnagraficaAnimales.FirstOrDefaultAsync(aa =>
+                    aa.IdAnimale.ToString() == anagraficaId
+                );
+
+                if (anagraficaFound == null)
+                {
+                    return false;
+                }
+
+                anagraficaFound.DataRegistrazione = anagrafica.DataRegistrazione;
+                anagraficaFound.Nome = anagrafica.Nome;
+                anagraficaFound.TipologiaId = anagrafica.TipologiaId;
+                anagraficaFound.Colore = anagrafica.Colore;
+                anagraficaFound.DataDiNascita = anagrafica.DataDiNascita;
+                anagraficaFound.PresenzaMicrochip = anagrafica.PresenzaMicrochip;
+                anagraficaFound.NumeroMicroChip = anagrafica.NumeroMicroChip;
+                anagraficaFound.ProprietarioId = anagrafica.ProprietarioId;
 
                 return await TrySaveAsync();
             }

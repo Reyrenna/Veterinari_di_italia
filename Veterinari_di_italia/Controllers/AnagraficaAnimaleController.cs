@@ -47,5 +47,49 @@ namespace Veterinari_di_italia.Controllers
                     new CreateAnagraficaResponseDto() { Message = "Qualcosa è andato storto!" }
                 );
         }
+
+        [HttpPut("anagraficaId")]
+        public async Task<IActionResult> Edit(
+            [FromBody] EditAnagraficaRequestDto editAnagrafica,
+            string anagraficaId
+        )
+        {
+            try
+            {
+                var anagraficaModificata = new AnagraficaAnimale()
+                {
+                    DataRegistrazione = editAnagrafica.DataRegistrazione,
+                    Nome = editAnagrafica.Nome,
+                    Colore = editAnagrafica.Colore,
+                    DataDiNascita = editAnagrafica.DataDiNascita,
+                    PresenzaMicrochip = editAnagrafica.PresenzaMicrochip,
+                    NumeroMicroChip = editAnagrafica.NumeroMicrochip,
+                    ProprietarioId = editAnagrafica.ProprietarioId,
+                    TipologiaId = editAnagrafica.TipologiaId,
+                };
+
+                var result = await _anagraficaAnimaleService.EditAnagraficaAsync(
+                    anagraficaModificata,
+                    anagraficaId
+                );
+
+                return result
+                    ? Ok(
+                        new EditAnagraficaResponseDto()
+                        {
+                            Message = "Anagrafica modificata con successo!",
+                        }
+                    )
+                    : BadRequest(
+                        new EditAnagraficaResponseDto() { Message = "Qualcosa è andato storto!" }
+                    );
+            }
+            catch
+            {
+                return BadRequest(
+                    new EditAnagraficaResponseDto() { Message = "Qualcosa è andato storto!" }
+                );
+            }
+        }
     }
 }
