@@ -91,5 +91,26 @@ namespace Veterinari_di_italia.Controllers
                 );
             }
         }
+
+        [HttpDelete("delete/{anagraficaId}")]
+        public async Task<IActionResult> Delete(string anagraficaId)
+        {
+            var result = await _anagraficaAnimaleService.DeleteById(anagraficaId);
+
+            return result
+                ? Ok(
+                    new DeleteAnagraficaResponseDto()
+                    {
+                        Message = "Anagrafica cancellata con successo!",
+                    }
+                )
+                : BadRequest(
+                    new DeleteAnagraficaResponseDto() { Message = "Qualcosa è andatoi storto!" }
+                );
+        }
+
+        // Get All
+
+        // Get By Id
     }
 }

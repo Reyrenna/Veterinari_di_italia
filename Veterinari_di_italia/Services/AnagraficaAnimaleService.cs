@@ -72,5 +72,28 @@ namespace Veterinari_di_italia.Services
                 return false;
             }
         }
+
+        public async Task<bool> DeleteById(string anagraficaId)
+        {
+            try
+            {
+                var anagrafica = await _context.AnagraficaAnimales.FirstOrDefaultAsync(aa =>
+                    aa.IdAnimale.ToString() == anagraficaId
+                );
+
+                if (anagrafica == null)
+                {
+                    return false;
+                }
+
+                _context.AnagraficaAnimales.Remove(anagrafica);
+
+                return await TrySaveAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
