@@ -14,7 +14,7 @@ namespace Veterinari_di_italia.Models
         public required string Nome {  get; set; }
         [Required]
         
-        public TipologiaAnimale Tipo {  get; set; }
+        public TipologiaAnimale Tipo {  get; set; } 
 
         [Required]
         public required string Colore { get; set; }
@@ -25,8 +25,12 @@ namespace Veterinari_di_italia.Models
 
         public string? NumeroMicroChip { get; set; }
 
-        [Required]
-        public ApplicationUser ProprietarioAnimale { get; set; }
+        public ApplicationUser? ProprietarioAnimale { get; set; }
 
+        public ICollection<VisiteVeterinarie> visiteVeterinaries { get; set; }
+
+        public ICollection<GestioneRicoveri> gestioneRicoveris { get; set; } 
+  
+             
     }
 }

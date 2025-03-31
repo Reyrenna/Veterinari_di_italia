@@ -14,5 +14,9 @@ namespace Veterinari_di_italia.Models
 
         public ICollection<ApplicationUserRole> ApplicationUserRoles { get; set; }
 
+        public ICollection<AnagraficaAnimale> AnagraficaAnimale { get;set; }
+
+        public ICollection<VenditaFarmaco> VenditaFarmaco { get; set; }
+
     }
 }

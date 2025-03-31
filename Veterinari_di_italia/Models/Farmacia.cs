@@ -13,5 +13,8 @@ namespace Veterinari_di_italia.Models
 
         [Required]
         public string ElencoUsi { get; set; }
+
+        public ICollection<VenditaFarmaco> VenditaFarmaco { get;set; }
+
     }
 }
