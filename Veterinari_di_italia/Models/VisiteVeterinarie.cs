@@ -18,5 +18,9 @@ namespace Veterinari_di_italia.Models
 
         public AnagraficaAnimale AnagraficaAnimale { get; set; }
 
+        public static implicit operator VisiteVeterinarie(VisiteVeterinarie v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
