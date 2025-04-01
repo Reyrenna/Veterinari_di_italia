@@ -1,4 +1,5 @@
-﻿using Veterinari_di_italia.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Veterinari_di_italia.Data;
 using Veterinari_di_italia.Models;
 
 namespace Veterinari_di_italia.Services
@@ -24,11 +25,101 @@ namespace Veterinari_di_italia.Services
             }
         }
 
+        public async Task<List<GestioneRicoveri>?> GetAllRicoveriAsync()
+        {
+            try
+            {
+                var ricoveriList = await _context
+                    .GestioneRicoveris.Include(r => r.AnagraficaAnimale)
+                    .ThenInclude(a => a.Tipo)
+                    .Include(r => r.AnagraficaAnimale)
+                    .ThenInclude(a => a.ProprietarioAnimale)
+                    .ToListAsync();
+
+                return ricoveriList;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<GestioneRicoveri?> GetRicoveroByIdAsync(string ricoveroId)
+        {
+            try
+            {
+                var ricovero = await _context
+                    .GestioneRicoveris.Include(r => r.AnagraficaAnimale)
+                    .ThenInclude(a => a.Tipo)
+                    .Include(r => r.AnagraficaAnimale)
+                    .ThenInclude(a => a.ProprietarioAnimale)
+                    .FirstOrDefaultAsync(r => r.IdRicovero.ToString() == ricoveroId);
+
+                return ricovero;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> CreateRicoveroAsync(GestioneRicoveri newRicovero)
         {
             try
             {
                 _context.GestioneRicoveris.Add(newRicovero);
+
+                return await TrySaveAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> EditRicoveroByIdAsync(
+            GestioneRicoveri ricoveroModified,
+            string ricoveroId
+        )
+        {
+            try
+            {
+                var ricovero = await _context.GestioneRicoveris.FirstOrDefaultAsync(r =>
+                    r.IdRicovero.ToString() == ricoveroId
+                );
+
+                if (ricovero == null)
+                {
+                    return false;
+                }
+
+                ricovero.DataRicovero = ricoveroModified.DataRicovero;
+                ricovero.Ricoverato = ricoveroModified.Ricoverato;
+                ricovero.DescrizioneAnimale = ricoveroModified.DescrizioneAnimale;
+                ricovero.IdAnimale = ricoveroModified.IdAnimale;
+
+                return await TrySaveAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteById(string ricoveroId)
+        {
+            try
+            {
+                var ricovero = await _context.GestioneRicoveris.FirstOrDefaultAsync(r =>
+                    r.IdRicovero.ToString() == ricoveroId
+                );
+
+                if (ricovero == null)
+                {
+                    return false;
+                }
+
+                _context.GestioneRicoveris.Remove(ricovero);
 
                 return await TrySaveAsync();
             }
