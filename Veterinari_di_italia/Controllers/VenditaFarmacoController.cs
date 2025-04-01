@@ -210,5 +210,24 @@ namespace Veterinari_di_italia.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        // Put
+
+        [HttpDelete("{venditaId}")]
+        public async Task<IActionResult> Delete(string venditaId)
+        {
+            var result = await _venditaService.DeleteByIdAsync(venditaId);
+
+            return result
+                ? Ok(
+                    new DeleteVenditaFarmacoResponseDto()
+                    {
+                        Message = "Vendita eliminata con successo!",
+                    }
+                )
+                : BadRequest(
+                    new DeleteVenditaFarmacoResponseDto() { Message = "Qualcosa è andato storto!" }
+                );
+        }
     }
 }
