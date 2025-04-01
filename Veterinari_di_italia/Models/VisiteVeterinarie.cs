@@ -17,10 +17,5 @@ namespace Veterinari_di_italia.Models
         public ICollection<Farmacia> Farmaci { get; set; }
 
         public AnagraficaAnimale AnagraficaAnimale { get; set; }
-
-        public static implicit operator VisiteVeterinarie(VisiteVeterinarie v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

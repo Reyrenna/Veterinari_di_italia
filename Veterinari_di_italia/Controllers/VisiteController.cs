@@ -1,34 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.Models;
 using Veterinari_di_italia.Settings;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Veterinari_di_italia.DTOs.VisiteVeterinarie;
+using Veterinari_di_italia.Services;
 
 namespace Veterinari_di_italia.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AppointmentController : ControllerBase
+    public class VisiteController : ControllerBase
     {
-        private readonly Jwt _jwtSettings;
-        private readonly VisiteVeterinarie _visite;
+        private readonly VisiteService _visiteservice;
 
-        public AppointmentController(
-            Jwt jwtSettings, VisiteVeterinarie visite)
+        public VisiteController(VisiteService visiteservice)
         {
-            _jwtSettings = jwtSettings;
-            _visite = visite;
+            _visiteservice = visiteservice;
         }
 
-        [HttpPost("register")]
-        public Task<IActionResult> RegisterVisit([FromBody] CreateVisitDto createVisit)
+        [HttpPost]
+        public async Task<IActionResult> CreateVisit([FromBody] CreateVisitDtoRequest createVisit)
         {
             if (createVisit == null)
             {
-                return Task.FromResult<IActionResult>(BadRequest("dati non corretti"));
+                return BadRequest(new CreateVisitDtoResponse() { Message = "i dati non sono corretti" });
             }
 
             try
@@ -39,11 +34,19 @@ namespace Veterinari_di_italia.Controllers
                     EsameObiettivo = createVisit.EsameObiettivo,
                     Descrizione = createVisit.Descrizione
                 };
+                var result = await _visiteservice.CreateVisita(newVisit);
+                if (result)
+                {
+                    return Ok(new CreateVisitDtoResponse() { Message = "i dati sono corretti" });
+                }
+
+                return BadRequest(new CreateVisitDtoResponse() { Message = "i dati non sono corretti" });
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
+        }
     }
 }

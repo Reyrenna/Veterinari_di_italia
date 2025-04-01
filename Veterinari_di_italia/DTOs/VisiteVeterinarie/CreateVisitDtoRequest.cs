@@ -2,10 +2,10 @@
 
 namespace Veterinari_di_italia.DTOs.VisiteVeterinarie
 {
-    public class CreateVisitDto
+    public class CreateVisitDtoRequest
     {
         [Required]
-        public DateOnly DataDellaVisita { get; set; }
+        public DateTime DataDellaVisita { get; set; }
         [Required]
         public  string EsameObiettivo { get;set; }
         [Required]
