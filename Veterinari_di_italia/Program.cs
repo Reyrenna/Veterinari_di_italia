@@ -95,7 +95,7 @@ builder.Services.AddScoped<RoleManager<ApplicationRole>>();
 builder.Services.AddScoped<FarmaciService>();
 builder.Services.AddScoped<GestioneRicoveriService>();
 builder.Services.AddScoped<TipologiaAnimaliService>();
-
+builder.Services.AddScoped<VisiteService>();
 builder.Services.AddScoped<AnagraficaAnimaleService>();
 
 var app = builder.Build();

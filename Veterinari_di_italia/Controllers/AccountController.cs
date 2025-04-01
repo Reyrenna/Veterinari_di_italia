@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Veterinari_di_italia.DTOs.Account;
@@ -107,6 +108,13 @@ namespace Veterinari_di_italia.Controllers
             string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
             return Ok(new TokenResponse() { Token = tokenString, Expires = expiry });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return Ok(users);
         }
     }
 }
