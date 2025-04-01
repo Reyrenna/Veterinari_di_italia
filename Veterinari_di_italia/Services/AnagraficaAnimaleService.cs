@@ -4,7 +4,7 @@ using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.Farmacia;
 using Veterinari_di_italia.DTOs.GestioneRicoveri;
-using Veterinari_di_italia.DTOs.TipologiaAnimale;
+using Veterinari_di_italia.DTOs.TipoAnimale;
 using Veterinari_di_italia.DTOs.VenditaFarmaco;
 using Veterinari_di_italia.DTOs.VisiteVeterinarie;
 using Veterinari_di_italia.Models;

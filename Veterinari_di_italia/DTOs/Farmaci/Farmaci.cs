@@ -12,5 +12,6 @@ namespace Veterinari_di_italia.DTOs.Farmaci
         public string DittaFornitrice { get; set; }
         [Required]
         public string ElencoUsi { get; set; }
+
     }
 }
