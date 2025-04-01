@@ -233,14 +233,14 @@ namespace Veterinari_di_italia.Migrations
                     DataRicovero = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Ricoverato = table.Column<bool>(type: "bit", nullable: false),
                     DescrizioneAnimale = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnagraficaAnimaleIdAnimale = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    IdAnimale = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GestioneRicoveris", x => x.IdRicovero);
                     table.ForeignKey(
-                        name: "FK_GestioneRicoveris_AnagraficaAnimales_AnagraficaAnimaleIdAnimale",
-                        column: x => x.AnagraficaAnimaleIdAnimale,
+                        name: "FK_GestioneRicoveris_AnagraficaAnimales_IdAnimale",
+                        column: x => x.IdAnimale,
                         principalTable: "AnagraficaAnimales",
                         principalColumn: "IdAnimale",
                         onDelete: ReferentialAction.Cascade);
@@ -382,9 +382,9 @@ namespace Veterinari_di_italia.Migrations
                 column: "VenditaFarmacoIdVendita");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GestioneRicoveris_AnagraficaAnimaleIdAnimale",
+                name: "IX_GestioneRicoveris_IdAnimale",
                 table: "GestioneRicoveris",
-                column: "AnagraficaAnimaleIdAnimale");
+                column: "IdAnimale");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VenditaFarmaco_AcquirenteId",

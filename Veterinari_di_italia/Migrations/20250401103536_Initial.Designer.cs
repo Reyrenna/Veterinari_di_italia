@@ -12,7 +12,7 @@ using Veterinari_di_italia.Data;
 namespace Veterinari_di_italia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250401092238_Initial")]
+    [Migration("20250401103536_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -351,9 +351,6 @@ namespace Veterinari_di_italia.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRicovero"));
 
-                    b.Property<Guid>("AnagraficaAnimaleIdAnimale")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("DataRicovero")
                         .HasColumnType("datetime2");
 
@@ -361,12 +358,15 @@ namespace Veterinari_di_italia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("IdAnimale")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Ricoverato")
                         .HasColumnType("bit");
 
                     b.HasKey("IdRicovero");
 
-                    b.HasIndex("AnagraficaAnimaleIdAnimale");
+                    b.HasIndex("IdAnimale");
 
                     b.ToTable("GestioneRicoveris");
                 });
@@ -538,7 +538,7 @@ namespace Veterinari_di_italia.Migrations
                 {
                     b.HasOne("Veterinari_di_italia.Models.AnagraficaAnimale", "AnagraficaAnimale")
                         .WithMany("gestioneRicoveris")
-                        .HasForeignKey("AnagraficaAnimaleIdAnimale")
+                        .HasForeignKey("IdAnimale")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
