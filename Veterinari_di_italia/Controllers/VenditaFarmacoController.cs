@@ -211,7 +211,45 @@ namespace Veterinari_di_italia.Controllers
             }
         }
 
-        // Put
+        [HttpPut("{venditaId}")]
+        public async Task<IActionResult> Edit(
+            [FromBody] EditVenditaFarmacoRequestDto editVenditaFarmaco,
+            string venditaId
+        )
+        {
+            try
+            {
+                var venditaModificata = new VenditaFarmaco()
+                {
+                    DataAcquisto = editVenditaFarmaco.DataAcquisto,
+                    NumeroRicetta = editVenditaFarmaco.NumeroRicetta,
+                    AcquirenteId = editVenditaFarmaco.AcquirenteId,
+                };
+
+                var result = await _venditaService.EditVenditaByIdAsync(
+                    venditaModificata,
+                    venditaId
+                );
+
+                return result
+                    ? Ok(
+                        new EditVenditaFarmacoResponseDto()
+                        {
+                            Message = "Vendita modificata con successo!",
+                        }
+                    )
+                    : BadRequest(
+                        new EditVenditaFarmacoResponseDto()
+                        {
+                            Message = "Qualcosa è andato storto!",
+                        }
+                    );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpDelete("{venditaId}")]
         public async Task<IActionResult> Delete(string venditaId)

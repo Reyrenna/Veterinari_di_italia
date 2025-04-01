@@ -73,6 +73,34 @@ namespace Veterinari_di_italia.Services
             }
         }
 
+        public async Task<bool> EditVenditaByIdAsync(
+            VenditaFarmaco venditaModificata,
+            string venditaId
+        )
+        {
+            try
+            {
+                var vendita = await _context.VenditaFarmaco.FirstOrDefaultAsync(v =>
+                    v.IdVendita.ToString() == venditaId
+                );
+
+                if (vendita == null)
+                {
+                    return false;
+                }
+
+                vendita.NumeroRicetta = venditaModificata.NumeroRicetta;
+                vendita.DataAcquisto = venditaModificata.DataAcquisto;
+                vendita.AcquirenteId = venditaModificata.AcquirenteId;
+
+                return await TrySaveAsync();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> DeleteByIdAsync(string venditaId)
         {
             try
