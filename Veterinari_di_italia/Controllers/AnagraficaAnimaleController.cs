@@ -17,6 +17,42 @@ namespace Veterinari_di_italia.Controllers
             _anagraficaAnimaleService = anagraficaAnimaleService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var anagraficheList = await _anagraficaAnimaleService.GetAllAsync();
+
+            if (anagraficheList == null)
+            {
+                return BadRequest();
+            }
+
+            var count = anagraficheList.Count();
+
+            return anagraficheList.Count() == 1
+                ? Ok(
+                    new GetAllAnagraficheResponseDto()
+                    {
+                        Message = $"{count} anagrafica trovata!",
+                        Anagrafiche = anagraficheList,
+                    }
+                )
+                : Ok(
+                    new GetAllAnagraficheResponseDto()
+                    {
+                        Message = $"{count} anagrafiche trovate!",
+                        Anagrafiche = anagraficheList,
+                    }
+                );
+        }
+
+        // TODO completare
+        [HttpGet("anagrafica/{anagraficaId}")]
+        public async Task<IActionResult> GetAnagrafica()
+        {
+            return Ok();
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create(
             [FromBody] CreateAnagraficaRequestDto createAnagrafica
@@ -108,9 +144,5 @@ namespace Veterinari_di_italia.Controllers
                     new DeleteAnagraficaResponseDto() { Message = "Qualcosa è andatoi storto!" }
                 );
         }
-
-        // Get All
-
-        // Get By Id
     }
 }

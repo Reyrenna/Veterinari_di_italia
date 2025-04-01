@@ -26,6 +26,39 @@ namespace Veterinari_di_italia.Services
             }
         }
 
+        public async Task<List<AnagraficaDto>?> GetAllAsync()
+        {
+            try
+            {
+                var anagraficheList = await _context.AnagraficaAnimales.ToListAsync();
+
+                var anagraficheDtoList = anagraficheList
+                    .Select(a => new AnagraficaDto()
+                    {
+                        IdAnimale = a.IdAnimale,
+                        DataRegistrazione = a.DataRegistrazione,
+                        Nome = a.Nome,
+                        TipologiaId = a.TipologiaId,
+                        Colore = a.Colore,
+                        DataDiNascita = a.DataDiNascita,
+                        PresenzaMicrochip = a.PresenzaMicrochip,
+                        NumeroMicroChip = a.NumeroMicroChip,
+                        ProprietarioId = a.ProprietarioId,
+                        // Tipo
+                        // Proprietario
+                        // visiteVeterinarire (lista)
+                        // gestione ricoveri (lista)
+                    })
+                    .ToList();
+
+                return anagraficheDtoList;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> CreateAnagraficaAsync(AnagraficaAnimale newAnagrafica)
         {
             try
