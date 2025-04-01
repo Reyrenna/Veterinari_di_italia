@@ -213,6 +213,13 @@ namespace Veterinari_di_italia.Migrations
                         },
                         new
                         {
+                            Id = "c7ef7bd0-60ab-4652-8025-f4b217cfe45d",
+                            ConcurrencyStamp = "c7ef7bd0-60ab-4652-8025-f4b217cfe45d",
+                            Name = "Farmacista",
+                            NormalizedName = "FARMACISTA"
+                        },
+                        new
+                        {
                             Id = "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca",
                             ConcurrencyStamp = "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca",
                             Name = "User",
@@ -392,7 +399,6 @@ namespace Veterinari_di_italia.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AcquirenteId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DataAcquisto")
@@ -546,9 +552,7 @@ namespace Veterinari_di_italia.Migrations
                 {
                     b.HasOne("Veterinari_di_italia.Models.ApplicationUser", "Acquirente")
                         .WithMany("VenditaFarmaco")
-                        .HasForeignKey("AcquirenteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AcquirenteId");
 
                     b.Navigation("Acquirente");
                 });

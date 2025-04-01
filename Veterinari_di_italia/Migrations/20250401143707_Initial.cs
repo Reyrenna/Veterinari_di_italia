@@ -181,7 +181,7 @@ namespace Veterinari_di_italia.Migrations
                     IdVendita = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroRicetta = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataAcquisto = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AcquirenteId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    AcquirenteId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -190,8 +190,7 @@ namespace Veterinari_di_italia.Migrations
                         name: "FK_VenditaFarmaco_AspNetUsers_AcquirenteId",
                         column: x => x.AcquirenteId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -319,7 +318,8 @@ namespace Veterinari_di_italia.Migrations
                 {
                     { "0e2d5024-c38d-4c5f-b16c-a2b493ce42f5", "0e2d5024-c38d-4c5f-b16c-a2b493ce42f5", "Veterinario", "VETERINARIO" },
                     { "38313626-5989-42B6-A848-A4CD63C725C9", "38313626-5989-42B6-A848-A4CD63C725C9", "Admin", "ADMIN" },
-                    { "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca", "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca", "User", "USER" }
+                    { "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca", "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca", "User", "USER" },
+                    { "c7ef7bd0-60ab-4652-8025-f4b217cfe45d", "c7ef7bd0-60ab-4652-8025-f4b217cfe45d", "Farmacista", "FARMACISTA" }
                 });
 
             migrationBuilder.CreateIndex(

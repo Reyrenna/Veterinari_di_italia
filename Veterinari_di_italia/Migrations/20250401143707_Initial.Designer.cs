@@ -12,7 +12,7 @@ using Veterinari_di_italia.Data;
 namespace Veterinari_di_italia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250401101135_Initial")]
+    [Migration("20250401143707_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -216,6 +216,13 @@ namespace Veterinari_di_italia.Migrations
                         },
                         new
                         {
+                            Id = "c7ef7bd0-60ab-4652-8025-f4b217cfe45d",
+                            ConcurrencyStamp = "c7ef7bd0-60ab-4652-8025-f4b217cfe45d",
+                            Name = "Farmacista",
+                            NormalizedName = "FARMACISTA"
+                        },
+                        new
+                        {
                             Id = "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca",
                             ConcurrencyStamp = "c1cf954c-68de-4ec4-b4d9-04cdb1a7f7ca",
                             Name = "User",
@@ -351,9 +358,6 @@ namespace Veterinari_di_italia.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdRicovero"));
 
-                    b.Property<Guid>("AnagraficaAnimaleIdAnimale")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("DataRicovero")
                         .HasColumnType("datetime2");
 
@@ -361,12 +365,15 @@ namespace Veterinari_di_italia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("IdAnimale")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Ricoverato")
                         .HasColumnType("bit");
 
                     b.HasKey("IdRicovero");
 
-                    b.HasIndex("AnagraficaAnimaleIdAnimale");
+                    b.HasIndex("IdAnimale");
 
                     b.ToTable("GestioneRicoveris");
                 });
@@ -395,7 +402,6 @@ namespace Veterinari_di_italia.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AcquirenteId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DataAcquisto")
@@ -538,7 +544,7 @@ namespace Veterinari_di_italia.Migrations
                 {
                     b.HasOne("Veterinari_di_italia.Models.AnagraficaAnimale", "AnagraficaAnimale")
                         .WithMany("gestioneRicoveris")
-                        .HasForeignKey("AnagraficaAnimaleIdAnimale")
+                        .HasForeignKey("IdAnimale")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -549,9 +555,7 @@ namespace Veterinari_di_italia.Migrations
                 {
                     b.HasOne("Veterinari_di_italia.Models.ApplicationUser", "Acquirente")
                         .WithMany("VenditaFarmaco")
-                        .HasForeignKey("AcquirenteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AcquirenteId");
 
                     b.Navigation("Acquirente");
                 });
