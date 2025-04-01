@@ -95,6 +95,7 @@ builder.Services.AddScoped<RoleManager<ApplicationRole>>();
 builder.Services.AddScoped<FarmaciService>();
 builder.Services.AddScoped<GestioneRicoveriService>();
 builder.Services.AddScoped<TipologiaAnimaliService>();
+builder.Services.AddScoped<VenditaFarmacoService>();
 builder.Services.AddScoped<VisiteService>();
 builder.Services.AddScoped<AnagraficaAnimaleService>();
 
