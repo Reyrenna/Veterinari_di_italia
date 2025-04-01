@@ -136,7 +136,7 @@ namespace Veterinari_di_italia.Controllers
                 {
                     return Ok();
                 }
-                return BadRequest (new DeleteFarmaciResponseDTO() {Message = ("Errore durante l'eliminazione del farmaco."});
+                return BadRequest (new DeleteFarmaciResponseDTO() {Message = "Errore durante l'eliminazione del farmaco."});
             }
             catch (Exception ex)
             {
