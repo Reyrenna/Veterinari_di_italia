@@ -1,5 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Veterinari_di_italia.DTOs.Account;
+using Veterinari_di_italia.DTOs.GestioneRicoveri;
+using Veterinari_di_italia.DTOs.TipologiaAnimale;
+using Veterinari_di_italia.DTOs.VisiteVeterinarie;
 using Veterinari_di_italia.Models;
 
 namespace Veterinari_di_italia.DTOs.AnagraficaAnimale
@@ -19,7 +23,7 @@ namespace Veterinari_di_italia.DTOs.AnagraficaAnimale
         public required int TipologiaId { get; set; }
 
         [ForeignKey(nameof(TipologiaId))]
-        public TipologiaAnimale Tipo { get; set; }
+        public TipologiaSimpleDto? Tipo { get; set; }
 
         [Required]
         public required string Colore { get; set; }
@@ -34,10 +38,11 @@ namespace Veterinari_di_italia.DTOs.AnagraficaAnimale
 
         public string? ProprietarioId { get; set; }
 
-        public ApplicationUser? ProprietarioAnimale { get; set; }
+        [ForeignKey(nameof(ProprietarioId))]
+        public UserSimpleDto? ProprietarioAnimale { get; set; }
 
-        public ICollection<VisiteVeterinarie> visiteVeterinaries { get; set; }
+        public ICollection<VisiteVeterinarieSimpleDto>? VisiteVeterinaries { get; set; }
 
-        public ICollection<GestioneRicoveri> gestioneRicoveris { get; set; }
+        public ICollection<GestioneRicoveriSimpleDto>? GestioneRicoveris { get; set; }
     }
 }

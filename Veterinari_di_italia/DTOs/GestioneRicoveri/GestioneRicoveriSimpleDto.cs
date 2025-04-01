@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Veterinari_di_italia.Models
+namespace Veterinari_di_italia.DTOs.GestioneRicoveri
 {
-    public class GestioneRicoveri
+    public class GestioneRicoveriSimpleDto
     {
-        [Key]
+        [Required]
         public int IdRicovero { get; set; }
 
         [Required]
@@ -15,7 +15,5 @@ namespace Veterinari_di_italia.Models
 
         [Required]
         public required string DescrizioneAnimale { get; set; }
-
-        public AnagraficaAnimale AnagraficaAnimale { get; set; }
     }
 }

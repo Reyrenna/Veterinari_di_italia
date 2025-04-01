@@ -206,15 +206,14 @@ namespace Veterinari_di_italia.Migrations
                     DataDiNascita = table.Column<DateOnly>(type: "date", nullable: false),
                     PresenzaMicrochip = table.Column<bool>(type: "bit", nullable: false),
                     NumeroMicroChip = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProprietarioId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProprietarioAnimaleId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ProprietarioId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AnagraficaAnimales", x => x.IdAnimale);
                     table.ForeignKey(
-                        name: "FK_AnagraficaAnimales_AspNetUsers_ProprietarioAnimaleId",
-                        column: x => x.ProprietarioAnimaleId,
+                        name: "FK_AnagraficaAnimales_AspNetUsers_ProprietarioId",
+                        column: x => x.ProprietarioId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -324,9 +323,9 @@ namespace Veterinari_di_italia.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnagraficaAnimales_ProprietarioAnimaleId",
+                name: "IX_AnagraficaAnimales_ProprietarioId",
                 table: "AnagraficaAnimales",
-                column: "ProprietarioAnimaleId");
+                column: "ProprietarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AnagraficaAnimales_TipologiaId",
