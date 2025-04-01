@@ -12,7 +12,7 @@ using Veterinari_di_italia.Data;
 namespace Veterinari_di_italia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250401092238_Initial")]
+    [Migration("20250401101135_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
