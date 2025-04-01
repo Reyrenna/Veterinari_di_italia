@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Veterinari_di_italia.DTOs.Farmacia;
 
 namespace Veterinari_di_italia.DTOs.Farmaci
 {
@@ -6,6 +7,10 @@ namespace Veterinari_di_italia.DTOs.Farmaci
     {
         [Required]
         public string Message { get; set; }
-        
+
+        [Required]
+
+        public FarmaciaSimpleDto? Farmaci { get; set; }
+
     }
 }

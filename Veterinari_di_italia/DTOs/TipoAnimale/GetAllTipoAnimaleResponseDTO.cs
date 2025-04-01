@@ -6,5 +6,8 @@ namespace Veterinari_di_italia.DTOs.TipoAnimale
     {
         [Required]
         public required string Message { get; set; }
+
+        [Required]
+        public List<TipologiaICollection>? Tipologie { get; set; }
     }
 }
