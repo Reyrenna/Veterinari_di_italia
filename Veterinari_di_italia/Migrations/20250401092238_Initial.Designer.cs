@@ -12,7 +12,7 @@ using Veterinari_di_italia.Data;
 namespace Veterinari_di_italia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250331153742_Initial")]
+    [Migration("20250401092238_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -158,18 +158,15 @@ namespace Veterinari_di_italia.Migrations
                     b.Property<bool>("PresenzaMicrochip")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ProprietarioAnimaleId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ProprietarioId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TipologiaId")
                         .HasColumnType("int");
 
                     b.HasKey("IdAnimale");
 
-                    b.HasIndex("ProprietarioAnimaleId");
+                    b.HasIndex("ProprietarioId");
 
                     b.HasIndex("TipologiaId");
 
@@ -498,7 +495,7 @@ namespace Veterinari_di_italia.Migrations
                 {
                     b.HasOne("Veterinari_di_italia.Models.ApplicationUser", "ProprietarioAnimale")
                         .WithMany("AnagraficaAnimale")
-                        .HasForeignKey("ProprietarioAnimaleId");
+                        .HasForeignKey("ProprietarioId");
 
                     b.HasOne("Veterinari_di_italia.Models.TipologiaAnimale", "Tipo")
                         .WithMany("AnagraficaAnimale")

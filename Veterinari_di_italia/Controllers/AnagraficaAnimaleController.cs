@@ -48,9 +48,25 @@ namespace Veterinari_di_italia.Controllers
 
         // TODO completare
         [HttpGet("anagrafica/{anagraficaId}")]
-        public async Task<IActionResult> GetAnagrafica()
+        public async Task<IActionResult> GetAnagrafica(string anagraficaId)
         {
-            return Ok();
+            var anagraficaFound = await _anagraficaAnimaleService.GetByIdAsync(anagraficaId);
+
+            return anagraficaFound == null
+                ? Ok(
+                    new GetAnagraficaResponseDto()
+                    {
+                        Message = "Nessuna anagrafica trovata!",
+                        Anagrafica = null,
+                    }
+                )
+                : Ok(
+                    new GetAnagraficaResponseDto()
+                    {
+                        Message = "Anagrafica trovata",
+                        Anagrafica = anagraficaFound,
+                    }
+                );
         }
 
         [HttpPost("create")]

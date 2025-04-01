@@ -75,7 +75,8 @@ namespace Veterinari_di_italia.Data
             builder
                 .Entity<AnagraficaAnimale>()
                 .HasOne(dc => dc.ProprietarioAnimale)
-                .WithMany(dc => dc.AnagraficaAnimale);
+                .WithMany(dc => dc.AnagraficaAnimale)
+                .HasForeignKey(dc => dc.ProprietarioId);
             builder
                 .Entity<ApplicationUser>()
                 .HasMany(dc => dc.AnagraficaAnimale)
