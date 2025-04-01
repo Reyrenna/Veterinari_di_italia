@@ -26,17 +26,11 @@ namespace Veterinari_di_italia.Services
             }
         }
        
-        public async Task<bool> CreateFarmaci(CreateFarmaciDTO createfarmaci)
+        public async Task<bool> CreateFarmaci(Farmacia createfarmaci)
         {
             try
             {
-                Farmacia farmaci = new()
-                {
-                    Nome = createfarmaci.Nome,
-                    DittaFornitrice = createfarmaci.DittaFornitrice,
-                    ElencoUsi = createfarmaci.ElencoUsi
-                };
-                _context.Farmacias.Add(farmaci);
+                _context.Farmacias.Add(createfarmaci);
                 return await SaveAsync();
             }
             catch (Exception ex)
