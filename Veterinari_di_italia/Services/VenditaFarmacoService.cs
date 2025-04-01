@@ -1,4 +1,5 @@
-﻿using Veterinari_di_italia.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Veterinari_di_italia.Data;
 using Veterinari_di_italia.Models;
 
 namespace Veterinari_di_italia.Services
@@ -21,6 +22,40 @@ namespace Veterinari_di_italia.Services
             catch
             {
                 return false;
+            }
+        }
+
+        public async Task<List<VenditaFarmaco>?> GetAllVenditeAsync()
+        {
+            try
+            {
+                var venditeList = await _context
+                    .VenditaFarmaco.Include(v => v.Acquirente)
+                    .Include(v => v.Farmacia)
+                    .ToListAsync();
+
+                return venditeList;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<VenditaFarmaco?> GetVenditaByIdAsync(string venditaId)
+        {
+            try
+            {
+                var vendita = await _context
+                    .VenditaFarmaco.Include(v => v.Acquirente)
+                    .Include(v => v.Farmacia)
+                    .FirstOrDefaultAsync(v => v.IdVendita.ToString() == venditaId);
+
+                return vendita;
+            }
+            catch
+            {
+                return null;
             }
         }
 
