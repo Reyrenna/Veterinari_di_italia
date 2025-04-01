@@ -6,8 +6,8 @@ namespace Veterinari_di_italia.Models
 {
     public class ApplicationUserRole : IdentityUserRole<string>
     {
-        public required string UserId { get; set; }
-        public required string RoleId { get; set; }
+        public required Guid UserId { get; set; }
+        public required Guid RoleId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser ApplicationUser { get; set; }

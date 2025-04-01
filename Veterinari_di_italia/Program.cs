@@ -93,6 +93,8 @@ builder.Services.AddScoped<SignInManager<ApplicationUser>>();
 builder.Services.AddScoped<RoleManager<ApplicationRole>>();
 builder.Services.AddScoped<FarmaciService>();
 
+builder.Services.AddScoped<AnagraficaAnimaleService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Veterinari_di_italia.Models;
 
-namespace Veterinari_di_italia.Models
+namespace Veterinari_di_italia.DTOs.AnagraficaAnimale
 {
-    public class AnagraficaAnimale
+    public class AnagraficaDto
     {
-        [Key]
+        [Required]
         public Guid IdAnimale { get; set; }
 
         [Required]
         public DateTime DataRegistrazione { get; set; }
 
         [Required]
-        [MaxLength(80)]
         public required string Nome { get; set; }
 
         [Required]
