@@ -1,11 +1,11 @@
-﻿using Veterinari_di_italia.Data;
-using Veterinari_di_italia.DTOs.VisiteVeterinarie;
-using Veterinari_di_italia.Models;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using Veterinari_di_italia.Data;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.Farmacia;
 using Veterinari_di_italia.DTOs.TipoAnimale;
+using Veterinari_di_italia.DTOs.VisiteVeterinarie;
+using Veterinari_di_italia.Models;
 
 namespace Veterinari_di_italia.Services
 {
@@ -28,24 +28,20 @@ namespace Veterinari_di_italia.Services
             {
                 return false;
             }
-
         }
 
         public async Task<bool> CreateVisita(VisiteVeterinarie visite)
         {
             try
             {
-
                 _context.VisiteVeterinaries.Add(visite);
 
                 return await Saveasync();
-
             }
             catch (Exception ex)
             {
                 return false;
             }
-
         }
 
         public async Task<List<VisiteVeterinarieSimpleDto>?> GetAllAsync()
@@ -53,9 +49,9 @@ namespace Veterinari_di_italia.Services
             try
             {
                 var Visite = await _context
-                     .VisiteVeterinaries.Include(a => a.AnagraficaAnimale)
-                     .Include(a => a.Farmaci)
-                     .ToListAsync();
+                    .VisiteVeterinaries.Include(a => a.AnagraficaAnimale)
+                    .Include(a => a.Farmaci)
+                    .ToListAsync();
 
                 var VisiteListe = Visite
                     .Select(a => new VisiteVeterinarieSimpleDto()
@@ -65,16 +61,19 @@ namespace Veterinari_di_italia.Services
                         EsameObiettivo = a.EsameObiettivo,
                         Descrizione = a.Descrizione,
 
-                        Farmaci = a.Farmaci.Count > 0 ? a.Farmaci.Select(a => new FarmaciaSimpleDto()
-                        {
-                            IdFarmaco = a.IdFarmaco,
-                            Nome = a.Nome,
-                            DittaFornitrice = a.DittaFornitrice,
-                            ElencoUsi = a.ElencoUsi,
-
-                        }).ToList()
-
-                        : null,
+                        Farmaci =
+                            a.Farmaci.Count > 0
+                                ? a
+                                    .Farmaci.Select(a => new FarmaciaSimpleDto()
+                                    {
+                                        IdFarmaco = a.IdFarmaco,
+                                        Nome = a.Nome,
+                                        DittaFornitrice = a.DittaFornitrice,
+                                        ElencoUsi = a.ElencoUsi,
+                                        Farmaco = a.Farmaco,
+                                    })
+                                    .ToList()
+                                : null,
 
                         Anagrafica = new AnagraficaSimpleDTO()
                         {
@@ -91,16 +90,13 @@ namespace Veterinari_di_italia.Services
                             PresenzaMicrochip = a.AnagraficaAnimale.PresenzaMicrochip,
                             NumeroMicroChip = a.AnagraficaAnimale.NumeroMicroChip,
                             ProprietarioId = a.AnagraficaAnimale.ProprietarioId,
-
                         },
-
-
-                    }).ToList();
+                    })
+                    .ToList();
                 return VisiteListe;
             }
             catch (Exception ex)
             {
-
                 return null;
             }
         }
@@ -123,14 +119,19 @@ namespace Veterinari_di_italia.Services
                     DataDellaVisita = Visita.DataDellaVisita,
                     EsameObiettivo = Visita.EsameObiettivo,
                     Descrizione = Visita.Descrizione,
-                    Farmaci = Visita.Farmaci.Count > 0 ? Visita.Farmaci.Select(a => new FarmaciaSimpleDto()
-                    {
-                        IdFarmaco = a.IdFarmaco,
-                        Nome = a.Nome,
-                        DittaFornitrice = a.DittaFornitrice,
-                        ElencoUsi = a.ElencoUsi,
-                    }).ToList()
-                    : null,
+                    Farmaci =
+                        Visita.Farmaci.Count > 0
+                            ? Visita
+                                .Farmaci.Select(a => new FarmaciaSimpleDto()
+                                {
+                                    IdFarmaco = a.IdFarmaco,
+                                    Nome = a.Nome,
+                                    DittaFornitrice = a.DittaFornitrice,
+                                    ElencoUsi = a.ElencoUsi,
+                                    Farmaco = a.Farmaco,
+                                })
+                                .ToList()
+                            : null,
                     Anagrafica = new AnagraficaSimpleDTO()
                     {
                         DataRegistrazione = Visita.AnagraficaAnimale.DataRegistrazione,
@@ -195,10 +196,6 @@ namespace Veterinari_di_italia.Services
             {
                 return false;
             }
-
         }
-
     }
-   
-
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Veterinari_di_italia.DTOs.FarmaciaVenditaFarmaco;
 using Veterinari_di_italia.DTOs.VenditaFarmaco;
 using Veterinari_di_italia.Models;
 
@@ -18,6 +19,9 @@ namespace Veterinari_di_italia.DTOs.Farmacia
         [Required]
         public string ElencoUsi { get; set; }
 
-        public ICollection<VenditaFarmacoSimpleDto>? VenditaFarmaco { get; set; }
+        [Required]
+        public required bool Farmaco { get; set; }
+
+        public List<GetFarmacoFarmaciaVenditaFarmacoResponseDto>? FarmaciaVenditaFarmaco { get; set; }
     }
 }

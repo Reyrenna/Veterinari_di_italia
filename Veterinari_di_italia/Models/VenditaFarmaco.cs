@@ -18,6 +18,6 @@ namespace Veterinari_di_italia.Models
         [ForeignKey(nameof(AcquirenteId))]
         public ApplicationUser Acquirente { get; set; }
 
-        public ICollection<Farmacia> Farmacia { get; set; }
+        public List<FarmaciaVenditaFarmaco> FarmaciaVenditaFarmaco { get; set; }
     }
 }

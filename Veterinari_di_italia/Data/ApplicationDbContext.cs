@@ -106,11 +106,16 @@ namespace Veterinari_di_italia.Data
                 .WithOne(fi => fi.Acquirente);
 
             builder
-                .Entity<VenditaFarmaco>()
-                .HasMany(fi => fi.Farmacia)
-                .WithMany(fi => fi.VenditaFarmaco);
+                .Entity<FarmaciaVenditaFarmaco>()
+                .HasOne(fvf => fvf.Farmaco)
+                .WithMany(f => f.FarmaciaVenditaFarmaco)
+                .HasForeignKey(fvf => fvf.FarmaciaIdFarmaco);
 
-            builder.Entity<Farmacia>().HasMany(fi => fi.VenditaFarmaco).WithMany(fi => fi.Farmacia);
+            builder
+                .Entity<FarmaciaVenditaFarmaco>()
+                .HasOne(fvf => fvf.VenditaFarmaco)
+                .WithMany(vf => vf.FarmaciaVenditaFarmaco)
+                .HasForeignKey(fvf => fvf.VenditaFarmacoIdVendita);
 
             builder
                 .Entity<ApplicationRole>()

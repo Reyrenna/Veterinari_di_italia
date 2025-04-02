@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Veterinari_di_italia.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initial2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -254,14 +254,14 @@ namespace Veterinari_di_italia.Migrations
                     DataDellaVisita = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EsameObiettivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnagraficaAnimaleIdAnimale = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    IdAnimale = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VisiteVeterinaries", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VisiteVeterinaries_AnagraficaAnimales_AnagraficaAnimaleIdAnimale",
-                        column: x => x.AnagraficaAnimaleIdAnimale,
+                        name: "FK_VisiteVeterinaries_AnagraficaAnimales_IdAnimale",
+                        column: x => x.IdAnimale,
                         principalTable: "AnagraficaAnimales",
                         principalColumn: "IdAnimale",
                         onDelete: ReferentialAction.Cascade);
@@ -275,6 +275,7 @@ namespace Veterinari_di_italia.Migrations
                     Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DittaFornitrice = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ElencoUsi = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Farmaco = table.Column<bool>(type: "bit", nullable: false),
                     VisiteVeterinarieId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -291,12 +292,13 @@ namespace Veterinari_di_italia.Migrations
                 name: "FarmaciaVenditaFarmaco",
                 columns: table => new
                 {
+                    FarmaciaVenditaFarmacoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FarmaciaIdFarmaco = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VenditaFarmacoIdVendita = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FarmaciaVenditaFarmaco", x => new { x.FarmaciaIdFarmaco, x.VenditaFarmacoIdVendita });
+                    table.PrimaryKey("PK_FarmaciaVenditaFarmaco", x => x.FarmaciaVenditaFarmacoId);
                     table.ForeignKey(
                         name: "FK_FarmaciaVenditaFarmaco_Farmacias_FarmaciaIdFarmaco",
                         column: x => x.FarmaciaIdFarmaco,
@@ -377,6 +379,11 @@ namespace Veterinari_di_italia.Migrations
                 column: "VisiteVeterinarieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FarmaciaVenditaFarmaco_FarmaciaIdFarmaco",
+                table: "FarmaciaVenditaFarmaco",
+                column: "FarmaciaIdFarmaco");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_FarmaciaVenditaFarmaco_VenditaFarmacoIdVendita",
                 table: "FarmaciaVenditaFarmaco",
                 column: "VenditaFarmacoIdVendita");
@@ -392,9 +399,9 @@ namespace Veterinari_di_italia.Migrations
                 column: "AcquirenteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_VisiteVeterinaries_AnagraficaAnimaleIdAnimale",
+                name: "IX_VisiteVeterinaries_IdAnimale",
                 table: "VisiteVeterinaries",
-                column: "AnagraficaAnimaleIdAnimale");
+                column: "IdAnimale");
         }
 
         /// <inheritdoc />

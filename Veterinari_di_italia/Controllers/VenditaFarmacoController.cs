@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.Farmacia;
+using Veterinari_di_italia.DTOs.FarmaciaVenditaFarmaco;
 using Veterinari_di_italia.DTOs.VenditaFarmaco;
 using Veterinari_di_italia.Models;
 using Veterinari_di_italia.Services;
@@ -52,30 +53,22 @@ namespace Veterinari_di_italia.Controllers
                             CodiceFiscale = v.Acquirente.CodiceFiscale,
                             Email = v.Acquirente.Email,
                         },
-                        Farmacia = (ICollection<FarmaciaSimpleDto>?)(
-                            v.Farmacia.Count > 0
-                                ? v.Farmacia.Select(f => new FarmaciaSimpleDto()
+                        FarmaciaVenditaFarmaco = v
+                            .FarmaciaVenditaFarmaco.Select(
+                                fvf => new GetVenditaFarmaciaVenditaFarmacoResponseDto()
                                 {
-                                    IdFarmaco = f.IdFarmaco,
-                                    Nome = f.Nome,
-                                    DittaFornitrice = f.DittaFornitrice,
-                                    ElencoUsi = f.ElencoUsi,
-                                    VenditaFarmaco =
-                                        f.VenditaFarmaco.Count > 0
-                                            ? f
-                                                .VenditaFarmaco.Select(
-                                                    vf => new VenditaFarmacoSimpleDto()
-                                                    {
-                                                        IdVendita = vf.IdVendita,
-                                                        DataAcquisto = vf.DataAcquisto,
-                                                        NumeroRicetta = vf.NumeroRicetta,
-                                                    }
-                                                )
-                                                .ToList()
-                                            : null,
-                                })
-                                : null
-                        ),
+                                    FarmaciaIdFarmaco = fvf.FarmaciaIdFarmaco,
+                                    Farmaco = new FarmaciaSimpleDto()
+                                    {
+                                        IdFarmaco = fvf.Farmaco.IdFarmaco,
+                                        Nome = fvf.Farmaco.Nome,
+                                        DittaFornitrice = fvf.Farmaco.DittaFornitrice,
+                                        ElencoUsi = fvf.Farmaco.ElencoUsi,
+                                        Farmaco = fvf.Farmaco.Farmaco,
+                                    },
+                                }
+                            )
+                            .ToList(),
                     })
                     .ToList();
 
@@ -135,30 +128,22 @@ namespace Veterinari_di_italia.Controllers
                         CodiceFiscale = vendita.Acquirente.CodiceFiscale,
                         Email = vendita.Acquirente.Email,
                     },
-                    Farmacia = (ICollection<FarmaciaSimpleDto>?)(
-                        vendita.Farmacia.Count > 0
-                            ? vendita.Farmacia.Select(f => new FarmaciaSimpleDto()
+                    FarmaciaVenditaFarmaco = vendita
+                        .FarmaciaVenditaFarmaco.Select(
+                            fvf => new GetVenditaFarmaciaVenditaFarmacoResponseDto()
                             {
-                                IdFarmaco = f.IdFarmaco,
-                                Nome = f.Nome,
-                                DittaFornitrice = f.DittaFornitrice,
-                                ElencoUsi = f.ElencoUsi,
-                                VenditaFarmaco =
-                                    f.VenditaFarmaco.Count > 0
-                                        ? f
-                                            .VenditaFarmaco.Select(
-                                                vf => new VenditaFarmacoSimpleDto()
-                                                {
-                                                    IdVendita = vf.IdVendita,
-                                                    DataAcquisto = vf.DataAcquisto,
-                                                    NumeroRicetta = vf.NumeroRicetta,
-                                                }
-                                            )
-                                            .ToList()
-                                        : null,
-                            })
-                            : null
-                    ),
+                                FarmaciaIdFarmaco = fvf.FarmaciaIdFarmaco,
+                                Farmaco = new FarmaciaSimpleDto()
+                                {
+                                    IdFarmaco = fvf.Farmaco.IdFarmaco,
+                                    Nome = fvf.Farmaco.Nome,
+                                    DittaFornitrice = fvf.Farmaco.DittaFornitrice,
+                                    ElencoUsi = fvf.Farmaco.ElencoUsi,
+                                    Farmaco = fvf.Farmaco.Farmaco,
+                                },
+                            }
+                        )
+                        .ToList(),
                 };
 
                 return Ok(
@@ -182,11 +167,21 @@ namespace Veterinari_di_italia.Controllers
         {
             try
             {
+                var newGuidVendita = Guid.NewGuid();
+
                 var newVendita = new VenditaFarmaco()
                 {
+                    IdVendita = newGuidVendita,
                     NumeroRicetta = createVenditaFarmaco.NumeroRicetta,
                     DataAcquisto = createVenditaFarmaco.DataAcquisto,
                     AcquirenteId = createVenditaFarmaco.AcquirenteId,
+                    FarmaciaVenditaFarmaco = createVenditaFarmaco
+                        .FarmaciaVenditaFarmaco.Select(f => new FarmaciaVenditaFarmaco()
+                        {
+                            FarmaciaIdFarmaco = f.FarmaciaIdFarmaco,
+                            VenditaFarmacoIdVendita = newGuidVendita,
+                        })
+                        .ToList(),
                 };
 
                 var result = await _venditaService.CreateVenditaFarmacoAsync(newVendita);
