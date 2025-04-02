@@ -148,5 +148,7 @@ namespace Veterinari_di_italia.Services
                 return false;
             }
         }
+
+        public async Task<GestioneRicoveri>
     }
 }

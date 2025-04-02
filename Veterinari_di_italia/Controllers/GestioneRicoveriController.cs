@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Veterinari_di_italia.Data;
 using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.GestioneRicoveri;
@@ -376,6 +378,27 @@ namespace Veterinari_di_italia.Controllers
                         Message = "Qualcosa è andato storto!",
                     }
                 );
+        }
+
+        [HttpGet("RicercaRicoverato")]
+        public IActionResult Ricerca(string NumeroMicroChip )
+        {
+            if (NumeroMicroChip == "" && NumeroMicroChip == " ")
+            {
+                return BadRequest("ID tipologia non valido.");
+            }
+
+            var animali = _context.GestioneRicoveri
+                .Include(a => a.Tipo)
+                .Where(a => a.TipologiaId == tipologiaId)
+                .ToList();
+
+            if (!animali.Any())
+            {
+                return NotFound("Nessun animale trovato per questa tipologia.");
+            }
+
+            return Ok(animali);
         }
     }
 }
