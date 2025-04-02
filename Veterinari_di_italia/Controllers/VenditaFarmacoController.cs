@@ -262,5 +262,84 @@ namespace Veterinari_di_italia.Controllers
                     new DeleteVenditaFarmacoResponseDto() { Message = "Qualcosa è andato storto!" }
                 );
         }
+
+        [HttpGet("data/{DataRichiesta}")]
+        public async Task<IActionResult> GetByDate(DateTime DataRichiesta)
+        {
+            try
+            {
+                var result = await _venditaService.GetVenditeByDateTime(DataRichiesta);
+
+                if (result == null)
+                {
+                    return BadRequest(
+                        new GetVenditeByDateResponseDto()
+                        {
+                            Message = "Qualcosa è andato storto!",
+                            Vendite = null,
+                        }
+                    );
+                }
+
+                var count = result.Count();
+
+                if (count == 0)
+                {
+                    return Ok(
+                        new GetVenditeByDateResponseDto()
+                        {
+                            Message = "Nessuna vendita trovata!",
+                            Vendite = new List<VenditaFarmacoDto>(),
+                        }
+                    );
+                }
+
+                var venditeDtoList = result
+                    .Select(v => new VenditaFarmacoDto()
+                    {
+                        IdVendita = v.IdVendita,
+                        NumeroRicetta = v.NumeroRicetta,
+                        DataAcquisto = v.DataAcquisto,
+                        AcquirenteId = v.AcquirenteId,
+                        Acquirente = new UserSimpleDto()
+                        {
+                            Id = v.Acquirente.Id,
+                            Nome = v.Acquirente.Nome,
+                            Cognome = v.Acquirente.Cognome,
+                            CodiceFiscale = v.Acquirente.CodiceFiscale,
+                            Email = v.Acquirente.Email,
+                        },
+                        FarmaciaVenditaFarmaco = v
+                            .FarmaciaVenditaFarmaco.Select(
+                                fvf => new GetVenditaFarmaciaVenditaFarmacoResponseDto()
+                                {
+                                    FarmaciaIdFarmaco = fvf.FarmaciaIdFarmaco,
+                                    Farmaco = new FarmaciaSimpleDto()
+                                    {
+                                        IdFarmaco = fvf.Farmaco.IdFarmaco,
+                                        Nome = fvf.Farmaco.Nome,
+                                        DittaFornitrice = fvf.Farmaco.DittaFornitrice,
+                                        ElencoUsi = fvf.Farmaco.ElencoUsi,
+                                        Farmaco = fvf.Farmaco.Farmaco,
+                                    },
+                                }
+                            )
+                            .ToList(),
+                    })
+                    .ToList();
+
+                return Ok(
+                    new GetVenditeByDateResponseDto()
+                    {
+                        Message = $"{count} vendite trovate!",
+                        Vendite = venditeDtoList,
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

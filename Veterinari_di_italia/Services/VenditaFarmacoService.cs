@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Veterinari_di_italia.Data;
 using Veterinari_di_italia.Models;
 
@@ -54,6 +55,26 @@ namespace Veterinari_di_italia.Services
                     .FirstOrDefaultAsync(v => v.IdVendita.ToString() == venditaId);
 
                 return vendita;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<VenditaFarmaco>?> GetVenditeByDateTime(DateTime DataRichiesta)
+        {
+            try
+            {
+
+                var venditeList = await _context
+                    .VenditaFarmaco.Include(v => v.Acquirente)
+                    .Include(v => v.FarmaciaVenditaFarmaco)
+                    .ThenInclude(fvf => fvf.Farmaco)
+                    .Where(v => v.DataAcquisto == DataRichiesta)
+                    .ToListAsync();
+
+                return venditeList;
             }
             catch
             {
