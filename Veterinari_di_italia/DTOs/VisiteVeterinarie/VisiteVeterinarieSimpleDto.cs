@@ -22,6 +22,6 @@ namespace Veterinari_di_italia.DTOs.VisiteVeterinarie
 
         public List<GetFarmaciFarmaciaVisiteVeterinarieDto>? FarmaciVisiteVeterinarie { get; set; }
 
-        public AnagraficaSimpleDTO Anagrafica { get; set; }
+        public AnagraficaSimpleDTO? Anagrafica { get; set; }
     }
 }

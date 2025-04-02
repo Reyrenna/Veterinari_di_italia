@@ -9,6 +9,6 @@ namespace Veterinari_di_italia.DTOs.FarmaciaVisiteVeterinarie
 
         // navigazione
         [ForeignKey(nameof(FarmacoId))]
-        public FarmaciaSimpleDto Farmaco { get; set; }
+        public FarmaciaSimpleDto? Farmaco { get; set; }
     }
 }

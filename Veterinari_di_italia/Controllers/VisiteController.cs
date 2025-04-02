@@ -38,12 +38,6 @@ namespace Veterinari_di_italia.Controllers
                     EsameObiettivo = createVisit.EsameObiettivo,
                     Descrizione = createVisit.Descrizione,
                     IdAnimale = Guid.Parse(createVisit.IdAnagraficaAnimale),
-                    //FarmaciaVisiteVeterinaries = createVisit
-                    //    .Farmaci?.Select(fvv => new FarmaciaVisiteVeterinarie()
-                    //    {
-                    //        FarmacoId = fvv.FarmacoId,
-                    //    })
-                    //    .ToList(),
                 };
                 var result = await _visiteservice.CreateVisita(newVisit);
 
