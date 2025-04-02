@@ -4,6 +4,7 @@ using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.Farmacia;
 using Veterinari_di_italia.DTOs.FarmaciaVenditaFarmaco;
+using Veterinari_di_italia.DTOs.FarmaciaVisiteVeterinarie;
 using Veterinari_di_italia.DTOs.GestioneRicoveri;
 using Veterinari_di_italia.DTOs.TipoAnimale;
 using Veterinari_di_italia.DTOs.VenditaFarmaco;
@@ -41,7 +42,8 @@ namespace Veterinari_di_italia.Services
                     .AnagraficaAnimales.Include(a => a.Tipo)
                     .Include(a => a.ProprietarioAnimale)
                     .Include(a => a.visiteVeterinaries)
-                    .ThenInclude(vv => vv.Farmaci)
+                    .ThenInclude(vv => vv.FarmaciaVisiteVeterinaries)
+                    .ThenInclude(fvv => fvv.Farmaco)
                     .ThenInclude(vf => vf.FarmaciaVenditaFarmaco)
                     .ThenInclude(fvf => fvf.VenditaFarmaco)
                     .Include(a => a.gestioneRicoveris)
@@ -82,37 +84,53 @@ namespace Veterinari_di_italia.Services
                                 DataDellaVisita = vv.DataDellaVisita,
                                 EsameObiettivo = vv.EsameObiettivo,
                                 Descrizione = vv.Descrizione,
-                                Farmaci =
-                                    vv.Farmaci.Count() > 0
+                                FarmaciVisiteVeterinarie =
+                                    vv.FarmaciaVisiteVeterinaries.Count() > 0
                                         ? vv
-                                            .Farmaci.Select(f => new FarmaciaSimpleDto()
-                                            {
-                                                IdFarmaco = f.IdFarmaco,
-                                                Nome = f.Nome,
-                                                DittaFornitrice = f.DittaFornitrice,
-                                                ElencoUsi = f.ElencoUsi,
-                                                Farmaco = f.Farmaco,
-                                                FarmaciaVenditaFarmaco = f
-                                                    .FarmaciaVenditaFarmaco.Select(
-                                                        vf => new GetFarmacoFarmaciaVenditaFarmacoResponseDto()
-                                                        {
-                                                            VenditaFarmacoIdVendita =
-                                                                vf.VenditaFarmacoIdVendita,
-                                                            VenditaFarmaco =
-                                                                new VenditaFarmacoSimpleDto()
-                                                                {
-                                                                    IdVendita =
-                                                                        vf.VenditaFarmaco.IdVendita,
-                                                                    NumeroRicetta =
-                                                                        vf.VenditaFarmaco.NumeroRicetta,
-                                                                    DataAcquisto =
-                                                                        vf.VenditaFarmaco.DataAcquisto,
-                                                                },
-                                                        }
-                                                    )
-                                                    .ToList(),
-                                            })
+                                            .FarmaciaVisiteVeterinaries.Select(
+                                                fvv => new GetFarmaciFarmaciaVisiteVeterinarieDto()
+                                                {
+                                                    FarmacoId = fvv.FarmacoId,
+                                                    Farmaco = new FarmaciaSimpleDto()
+                                                    {
+                                                        IdFarmaco = fvv.Farmaco.IdFarmaco,
+                                                        Nome = fvv.Farmaco.Nome,
+                                                        Farmaco = fvv.Farmaco.Farmaco,
+                                                        DittaFornitrice =
+                                                            fvv.Farmaco.DittaFornitrice,
+                                                        ElencoUsi = fvv.Farmaco.ElencoUsi,
+                                                    },
+                                                }
+                                            )
                                             .ToList()
+                                        //.Select(f => new FarmaciaSimpleDto()
+                                        //{
+                                        //    IdFarmaco = f.FarmacoId,
+                                        //    Nome = f.Farmaci[0].Nome,
+                                        //    DittaFornitrice = f.DittaFornitrice,
+                                        //    ElencoUsi = f.ElencoUsi,
+                                        //    Farmaco = f.Farmaco,
+                                        //    FarmaciaVenditaFarmaco = f
+                                        //        .FarmaciaVenditaFarmaco.Select(
+                                        //            vf => new GetFarmacoFarmaciaVenditaFarmacoResponseDto()
+                                        //            {
+                                        //                VenditaFarmacoIdVendita =
+                                        //                    vf.VenditaFarmacoIdVendita,
+                                        //                VenditaFarmaco =
+                                        //                    new VenditaFarmacoSimpleDto()
+                                        //                    {
+                                        //                        IdVendita =
+                                        //                            vf.VenditaFarmaco.IdVendita,
+                                        //                        NumeroRicetta =
+                                        //                            vf.VenditaFarmaco.NumeroRicetta,
+                                        //                        DataAcquisto =
+                                        //                            vf.VenditaFarmaco.DataAcquisto,
+                                        //                    },
+                                        //            }
+                                        //        )
+                                        //        .ToList(),
+                                        //})
+                                        //.ToList()
                                         : null,
                             })
                             .ToList(),
@@ -147,7 +165,11 @@ namespace Veterinari_di_italia.Services
                     .AnagraficaAnimales.Include(a => a.Tipo)
                     .Include(a => a.ProprietarioAnimale)
                     .Include(a => a.visiteVeterinaries)
-                    .ThenInclude(vv => vv.Farmaci)
+                    .ThenInclude(vv => vv.FarmaciaVisiteVeterinaries)
+                    .ThenInclude(fvv => fvv.Farmaco)
+                    .Include(a => a.visiteVeterinaries)
+                    .ThenInclude(vv => vv.FarmaciaVisiteVeterinaries)
+                    .ThenInclude(fvv => fvv.Farmaco)
                     .ThenInclude(vf => vf.FarmaciaVenditaFarmaco)
                     .Include(a => a.gestioneRicoveris)
                     .FirstOrDefaultAsync(a => a.IdAnimale.ToString() == anagraficaId);
@@ -191,38 +213,53 @@ namespace Veterinari_di_italia.Services
                             DataDellaVisita = vv.DataDellaVisita,
                             EsameObiettivo = vv.EsameObiettivo,
                             Descrizione = vv.Descrizione,
-                            Farmaci =
-                                vv.Farmaci.Count() > 0
-                                    ? vv
-                                        .Farmaci.Select(f => new FarmaciaSimpleDto()
+                            FarmaciVisiteVeterinarie = vv
+                                .FarmaciaVisiteVeterinaries.Select(
+                                    fvv => new GetFarmaciFarmaciaVisiteVeterinarieDto()
+                                    {
+                                        FarmacoId = fvv.FarmacoId,
+                                        Farmaco = new FarmaciaSimpleDto()
                                         {
-                                            IdFarmaco = f.IdFarmaco,
-                                            Nome = f.Nome,
-                                            DittaFornitrice = f.DittaFornitrice,
-                                            ElencoUsi = f.ElencoUsi,
-                                            Farmaco = f.Farmaco,
-                                            FarmaciaVenditaFarmaco = f
-                                                .FarmaciaVenditaFarmaco.Select(
-                                                    vf => new GetFarmacoFarmaciaVenditaFarmacoResponseDto()
-                                                    {
-                                                        VenditaFarmacoIdVendita =
-                                                            vf.VenditaFarmacoIdVendita,
-                                                        VenditaFarmaco =
-                                                            new VenditaFarmacoSimpleDto()
-                                                            {
-                                                                IdVendita =
-                                                                    vf.VenditaFarmaco.IdVendita,
-                                                                NumeroRicetta =
-                                                                    vf.VenditaFarmaco.NumeroRicetta,
-                                                                DataAcquisto =
-                                                                    vf.VenditaFarmaco.DataAcquisto,
-                                                            },
-                                                    }
-                                                )
-                                                .ToList(),
-                                        })
-                                        .ToList()
-                                    : null,
+                                            IdFarmaco = fvv.Farmaco.IdFarmaco,
+                                            Nome = fvv.Farmaco.Nome,
+                                            DittaFornitrice = fvv.Farmaco.DittaFornitrice,
+                                            ElencoUsi = fvv.Farmaco.ElencoUsi,
+                                            Farmaco = fvv.Farmaco.Farmaco,
+                                        },
+                                    }
+                                )
+                                .ToList(),
+                            //vv.Farmaci.Count() > 0
+                            //    ? vv
+                            //        .Farmaci.Select(f => new FarmaciaSimpleDto()
+                            //        {
+                            //            IdFarmaco = f.IdFarmaco,
+                            //            Nome = f.Nome,
+                            //            DittaFornitrice = f.DittaFornitrice,
+                            //            ElencoUsi = f.ElencoUsi,
+                            //            Farmaco = f.Farmaco,
+                            //            FarmaciaVenditaFarmaco = f
+                            //                .FarmaciaVenditaFarmaco.Select(
+                            //                    vf => new GetFarmacoFarmaciaVenditaFarmacoResponseDto()
+                            //                    {
+                            //                        VenditaFarmacoIdVendita =
+                            //                            vf.VenditaFarmacoIdVendita,
+                            //                        VenditaFarmaco =
+                            //                            new VenditaFarmacoSimpleDto()
+                            //                            {
+                            //                                IdVendita =
+                            //                                    vf.VenditaFarmaco.IdVendita,
+                            //                                NumeroRicetta =
+                            //                                    vf.VenditaFarmaco.NumeroRicetta,
+                            //                                DataAcquisto =
+                            //                                    vf.VenditaFarmaco.DataAcquisto,
+                            //                            },
+                            //                    }
+                            //                )
+                            //                .ToList(),
+                            //        })
+                            //        .ToList()
+                            //    : null,
                         })
                         .ToList(),
                     GestioneRicoveris =

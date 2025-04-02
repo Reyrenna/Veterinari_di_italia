@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Veterinari_di_italia.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial2 : Migration
+    public partial class Initial5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,22 @@ namespace Veterinari_di_italia.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Farmacias",
+                columns: table => new
+                {
+                    IdFarmaco = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DittaFornitrice = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ElencoUsi = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Farmaco = table.Column<bool>(type: "bit", nullable: false),
+                    Posizione = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Farmacias", x => x.IdFarmaco);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,6 +240,31 @@ namespace Veterinari_di_italia.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FarmaciaVenditaFarmaco",
+                columns: table => new
+                {
+                    FarmaciaVenditaFarmacoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FarmaciaIdFarmaco = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VenditaFarmacoIdVendita = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FarmaciaVenditaFarmaco", x => x.FarmaciaVenditaFarmacoId);
+                    table.ForeignKey(
+                        name: "FK_FarmaciaVenditaFarmaco_Farmacias_FarmaciaIdFarmaco",
+                        column: x => x.FarmaciaIdFarmaco,
+                        principalTable: "Farmacias",
+                        principalColumn: "IdFarmaco",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FarmaciaVenditaFarmaco_VenditaFarmaco_VenditaFarmacoIdVendita",
+                        column: x => x.VenditaFarmacoIdVendita,
+                        principalTable: "VenditaFarmaco",
+                        principalColumn: "IdVendita",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GestioneRicoveris",
                 columns: table => new
                 {
@@ -268,48 +309,27 @@ namespace Veterinari_di_italia.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Farmacias",
+                name: "FarmaciaVisiteVeterinaries",
                 columns: table => new
                 {
-                    IdFarmaco = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DittaFornitrice = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ElencoUsi = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Farmaco = table.Column<bool>(type: "bit", nullable: false),
-                    VisiteVeterinarieId = table.Column<int>(type: "int", nullable: true)
+                    FarmaciaVisiteVeterinarieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FarmacoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VisitaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Farmacias", x => x.IdFarmaco);
+                    table.PrimaryKey("PK_FarmaciaVisiteVeterinaries", x => x.FarmaciaVisiteVeterinarieId);
                     table.ForeignKey(
-                        name: "FK_Farmacias_VisiteVeterinaries_VisiteVeterinarieId",
-                        column: x => x.VisiteVeterinarieId,
-                        principalTable: "VisiteVeterinaries",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FarmaciaVenditaFarmaco",
-                columns: table => new
-                {
-                    FarmaciaVenditaFarmacoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FarmaciaIdFarmaco = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    VenditaFarmacoIdVendita = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FarmaciaVenditaFarmaco", x => x.FarmaciaVenditaFarmacoId);
-                    table.ForeignKey(
-                        name: "FK_FarmaciaVenditaFarmaco_Farmacias_FarmaciaIdFarmaco",
-                        column: x => x.FarmaciaIdFarmaco,
+                        name: "FK_FarmaciaVisiteVeterinaries_Farmacias_FarmacoId",
+                        column: x => x.FarmacoId,
                         principalTable: "Farmacias",
                         principalColumn: "IdFarmaco",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FarmaciaVenditaFarmaco_VenditaFarmaco_VenditaFarmacoIdVendita",
-                        column: x => x.VenditaFarmacoIdVendita,
-                        principalTable: "VenditaFarmaco",
-                        principalColumn: "IdVendita",
+                        name: "FK_FarmaciaVisiteVeterinaries_VisiteVeterinaries_VisitaId",
+                        column: x => x.VisitaId,
+                        principalTable: "VisiteVeterinaries",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -374,11 +394,6 @@ namespace Veterinari_di_italia.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Farmacias_VisiteVeterinarieId",
-                table: "Farmacias",
-                column: "VisiteVeterinarieId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FarmaciaVenditaFarmaco_FarmaciaIdFarmaco",
                 table: "FarmaciaVenditaFarmaco",
                 column: "FarmaciaIdFarmaco");
@@ -387,6 +402,16 @@ namespace Veterinari_di_italia.Migrations
                 name: "IX_FarmaciaVenditaFarmaco_VenditaFarmacoIdVendita",
                 table: "FarmaciaVenditaFarmaco",
                 column: "VenditaFarmacoIdVendita");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FarmaciaVisiteVeterinaries_FarmacoId",
+                table: "FarmaciaVisiteVeterinaries",
+                column: "FarmacoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FarmaciaVisiteVeterinaries_VisitaId",
+                table: "FarmaciaVisiteVeterinaries",
+                column: "VisitaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GestioneRicoveris_IdAnimale",
@@ -426,16 +451,19 @@ namespace Veterinari_di_italia.Migrations
                 name: "FarmaciaVenditaFarmaco");
 
             migrationBuilder.DropTable(
+                name: "FarmaciaVisiteVeterinaries");
+
+            migrationBuilder.DropTable(
                 name: "GestioneRicoveris");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Farmacias");
+                name: "VenditaFarmaco");
 
             migrationBuilder.DropTable(
-                name: "VenditaFarmaco");
+                name: "Farmacias");
 
             migrationBuilder.DropTable(
                 name: "VisiteVeterinaries");

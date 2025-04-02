@@ -19,6 +19,11 @@ namespace Veterinari_di_italia.Models
         [Required]
         public required bool Farmaco { get; set; }
 
-        public List<FarmaciaVenditaFarmaco> FarmaciaVenditaFarmaco { get; set; }
+        [Required]
+        public required string Posizione { get; set; }
+
+        public List<FarmaciaVenditaFarmaco>? FarmaciaVenditaFarmaco { get; set; }
+
+        public List<FarmaciaVisiteVeterinarie>? FarmaciaVisiteVeterinaries { get; set; }
     }
 }

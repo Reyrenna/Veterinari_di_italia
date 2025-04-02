@@ -12,8 +12,8 @@ using Veterinari_di_italia.Data;
 namespace Veterinari_di_italia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250402091704_Initial2")]
-    partial class Initial2
+    [Migration("20250402153936_Initial5")]
+    partial class Initial5
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -328,12 +328,11 @@ namespace Veterinari_di_italia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("VisiteVeterinarieId")
-                        .HasColumnType("int");
+                    b.Property<string>("Posizione")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdFarmaco");
-
-                    b.HasIndex("VisiteVeterinarieId");
 
                     b.ToTable("Farmacias");
                 });
@@ -357,6 +356,27 @@ namespace Veterinari_di_italia.Migrations
                     b.HasIndex("VenditaFarmacoIdVendita");
 
                     b.ToTable("FarmaciaVenditaFarmaco");
+                });
+
+            modelBuilder.Entity("Veterinari_di_italia.Models.FarmaciaVisiteVeterinarie", b =>
+                {
+                    b.Property<Guid>("FarmaciaVisiteVeterinarieId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FarmacoId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("VisitaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FarmaciaVisiteVeterinarieId");
+
+                    b.HasIndex("FarmacoId");
+
+                    b.HasIndex("VisitaId");
+
+                    b.ToTable("FarmaciaVisiteVeterinaries");
                 });
 
             modelBuilder.Entity("Veterinari_di_italia.Models.GestioneRicoveri", b =>
@@ -527,13 +547,6 @@ namespace Veterinari_di_italia.Migrations
                     b.Navigation("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Veterinari_di_italia.Models.Farmacia", b =>
-                {
-                    b.HasOne("Veterinari_di_italia.Models.VisiteVeterinarie", null)
-                        .WithMany("Farmaci")
-                        .HasForeignKey("VisiteVeterinarieId");
-                });
-
             modelBuilder.Entity("Veterinari_di_italia.Models.FarmaciaVenditaFarmaco", b =>
                 {
                     b.HasOne("Veterinari_di_italia.Models.Farmacia", "Farmaco")
@@ -551,6 +564,25 @@ namespace Veterinari_di_italia.Migrations
                     b.Navigation("Farmaco");
 
                     b.Navigation("VenditaFarmaco");
+                });
+
+            modelBuilder.Entity("Veterinari_di_italia.Models.FarmaciaVisiteVeterinarie", b =>
+                {
+                    b.HasOne("Veterinari_di_italia.Models.Farmacia", "Farmaco")
+                        .WithMany("FarmaciaVisiteVeterinaries")
+                        .HasForeignKey("FarmacoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Veterinari_di_italia.Models.VisiteVeterinarie", "Visita")
+                        .WithMany("FarmaciaVisiteVeterinaries")
+                        .HasForeignKey("VisitaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Farmaco");
+
+                    b.Navigation("Visita");
                 });
 
             modelBuilder.Entity("Veterinari_di_italia.Models.GestioneRicoveri", b =>
@@ -608,6 +640,8 @@ namespace Veterinari_di_italia.Migrations
             modelBuilder.Entity("Veterinari_di_italia.Models.Farmacia", b =>
                 {
                     b.Navigation("FarmaciaVenditaFarmaco");
+
+                    b.Navigation("FarmaciaVisiteVeterinaries");
                 });
 
             modelBuilder.Entity("Veterinari_di_italia.Models.TipologiaAnimale", b =>
@@ -622,7 +656,7 @@ namespace Veterinari_di_italia.Migrations
 
             modelBuilder.Entity("Veterinari_di_italia.Models.VisiteVeterinarie", b =>
                 {
-                    b.Navigation("Farmaci");
+                    b.Navigation("FarmaciaVisiteVeterinaries");
                 });
 #pragma warning restore 612, 618
         }

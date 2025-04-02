@@ -36,6 +36,8 @@ namespace Veterinari_di_italia.Data
 
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
 
+        public DbSet<FarmaciaVisiteVeterinarie> FarmaciaVisiteVeterinaries { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -116,6 +118,18 @@ namespace Veterinari_di_italia.Data
                 .HasOne(fvf => fvf.VenditaFarmaco)
                 .WithMany(vf => vf.FarmaciaVenditaFarmaco)
                 .HasForeignKey(fvf => fvf.VenditaFarmacoIdVendita);
+
+            builder
+                .Entity<FarmaciaVisiteVeterinarie>()
+                .HasOne(fvv => fvv.Visita)
+                .WithMany(v => v.FarmaciaVisiteVeterinaries)
+                .HasForeignKey(vff => vff.VisitaId);
+
+            builder
+                .Entity<FarmaciaVisiteVeterinarie>()
+                .HasOne(fvv => fvv.Farmaco)
+                .WithMany(f => f.FarmaciaVisiteVeterinaries)
+                .HasForeignKey(fvv => fvv.FarmacoId);
 
             builder
                 .Entity<ApplicationRole>()
