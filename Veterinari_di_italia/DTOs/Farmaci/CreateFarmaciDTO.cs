@@ -15,5 +15,8 @@ namespace Veterinari_di_italia.DTOs.Farmaci
 
         [Required]
         public required bool Farmaco { get; set; }
+
+        [Required]
+        public required string Posizione { get; set; }
     }
 }

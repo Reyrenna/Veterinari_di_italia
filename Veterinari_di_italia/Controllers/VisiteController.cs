@@ -30,22 +30,59 @@ namespace Veterinari_di_italia.Controllers
 
             try
             {
+                var newGuidVisita = Guid.NewGuid();
+
                 var newVisit = new VisiteVeterinarie()
                 {
                     DataDellaVisita = createVisit.DataDellaVisita,
                     EsameObiettivo = createVisit.EsameObiettivo,
                     Descrizione = createVisit.Descrizione,
                     IdAnimale = Guid.Parse(createVisit.IdAnagraficaAnimale),
+                    //FarmaciaVisiteVeterinaries = createVisit
+                    //    .Farmaci?.Select(fvv => new FarmaciaVisiteVeterinarie()
+                    //    {
+                    //        FarmacoId = fvv.FarmacoId,
+                    //    })
+                    //    .ToList(),
                 };
                 var result = await _visiteservice.CreateVisita(newVisit);
-                if (result)
+
+                if (!result)
                 {
-                    return Ok(new CreateVisitDtoResponse() { Message = "i dati sono corretti" });
+                    return BadRequest(
+                        new CreateVisitDtoResponse() { Message = "i dati non sono corretti" }
+                    );
                 }
 
-                return BadRequest(
-                    new CreateVisitDtoResponse() { Message = "i dati non sono corretti" }
-                );
+                var visitId = await _visiteservice.GetVisitaIdAsync(newVisit);
+
+                if (visitId == null)
+                {
+                    return BadRequest(
+                        new CreateVisitDtoResponse() { Message = "i dati non sono corretti" }
+                    );
+                }
+
+                int id = (int)visitId;
+                foreach (var element in createVisit.Farmaci)
+                {
+                    var collegamento = new FarmaciaVisiteVeterinarie()
+                    {
+                        FarmacoId = element.FarmacoId,
+                        VisitaId = id,
+                    };
+
+                    var res = await _visiteservice.AddRelationAsync(collegamento);
+
+                    if (!res)
+                    {
+                        return BadRequest(
+                            new CreateVisitDtoResponse() { Message = "i dati non sono corretti" }
+                        );
+                    }
+                }
+
+                return Ok(new CreateVisitDtoResponse() { Message = "i dati sono corretti" });
             }
             catch (Exception ex)
             {

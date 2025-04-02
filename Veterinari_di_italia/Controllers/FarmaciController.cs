@@ -33,6 +33,7 @@ namespace Veterinari_di_italia.Controllers
                     DittaFornitrice = createFarmaciDTO.DittaFornitrice,
                     ElencoUsi = createFarmaciDTO.ElencoUsi,
                     Farmaco = createFarmaciDTO.Farmaco,
+                    Posizione = createFarmaciDTO.Posizione,
                 };
 
                 var result = await _farmaciService.CreateFarmaci(newFarmaci);
@@ -135,6 +136,7 @@ namespace Veterinari_di_italia.Controllers
                     DittaFornitrice = createFarmaciDTO.DittaFornitrice,
                     ElencoUsi = createFarmaciDTO.ElencoUsi,
                     Farmaco = createFarmaciDTO.Farmaco,
+                    Posizione = createFarmaciDTO.Posizione,
                 };
                 var result = await _farmaciService.UpdateFarmaco(id, newFarmaci);
                 if (result)

@@ -20,7 +20,7 @@ namespace Veterinari_di_italia.Models
         [Required]
         public required Guid IdAnimale { get; set; }
 
-        public ICollection<Farmacia>? Farmaci { get; set; }
+        public List<FarmaciaVisiteVeterinarie>? FarmaciaVisiteVeterinaries { get; set; }
 
         [ForeignKey(nameof(IdAnimale))]
         public AnagraficaAnimale AnagraficaAnimale { get; set; }

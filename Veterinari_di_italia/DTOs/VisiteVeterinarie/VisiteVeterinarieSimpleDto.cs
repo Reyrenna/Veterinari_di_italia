@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.Farmacia;
+using Veterinari_di_italia.DTOs.FarmaciaVisiteVeterinarie;
 using Veterinari_di_italia.Models;
 
 namespace Veterinari_di_italia.DTOs.VisiteVeterinarie
@@ -19,10 +20,8 @@ namespace Veterinari_di_italia.DTOs.VisiteVeterinarie
         [Required]
         public required string Descrizione { get; set; }
 
-        public ICollection<FarmaciaSimpleDto>? Farmaci { get; set; }
+        public List<GetFarmaciFarmaciaVisiteVeterinarieDto>? FarmaciVisiteVeterinarie { get; set; }
 
         public AnagraficaSimpleDTO Anagrafica { get; set; }
-
-
     }
 }
