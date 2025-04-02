@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.Farmacia;
+using Veterinari_di_italia.DTOs.FarmaciaVenditaFarmaco;
 using Veterinari_di_italia.Models;
 
 namespace Veterinari_di_italia.DTOs.VenditaFarmaco
@@ -21,6 +22,6 @@ namespace Veterinari_di_italia.DTOs.VenditaFarmaco
         [ForeignKey(nameof(AcquirenteId))]
         public UserSimpleDto Acquirente { get; set; }
 
-        public ICollection<FarmaciaSimpleDto>? Farmacia { get; set; }
+        public List<GetVenditaFarmaciaVenditaFarmacoResponseDto>? FarmaciaVenditaFarmaco { get; set; }
     }
 }

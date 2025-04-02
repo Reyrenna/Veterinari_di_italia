@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Veterinari_di_italia.Models;
-using Veterinari_di_italia.Settings;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Veterinari_di_italia.DTOs.VisiteVeterinarie;
+using Veterinari_di_italia.Models;
 using Veterinari_di_italia.Services;
+using Veterinari_di_italia.Settings;
 
 namespace Veterinari_di_italia.Controllers
 {
@@ -23,7 +23,9 @@ namespace Veterinari_di_italia.Controllers
         {
             if (createVisit == null)
             {
-                return BadRequest(new CreateVisitDtoResponse() { Message = "i dati non sono corretti" });
+                return BadRequest(
+                    new CreateVisitDtoResponse() { Message = "i dati non sono corretti" }
+                );
             }
 
             try
@@ -32,7 +34,8 @@ namespace Veterinari_di_italia.Controllers
                 {
                     DataDellaVisita = createVisit.DataDellaVisita,
                     EsameObiettivo = createVisit.EsameObiettivo,
-                    Descrizione = createVisit.Descrizione
+                    Descrizione = createVisit.Descrizione,
+                    IdAnimale = Guid.Parse(createVisit.IdAnagraficaAnimale),
                 };
                 var result = await _visiteservice.CreateVisita(newVisit);
                 if (result)
@@ -40,17 +43,17 @@ namespace Veterinari_di_italia.Controllers
                     return Ok(new CreateVisitDtoResponse() { Message = "i dati sono corretti" });
                 }
 
-                return BadRequest(new CreateVisitDtoResponse() { Message = "i dati non sono corretti" });
+                return BadRequest(
+                    new CreateVisitDtoResponse() { Message = "i dati non sono corretti" }
+                );
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpGet]
-
         public async Task<IActionResult> GetAll()
         {
             try
@@ -69,7 +72,6 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("{id:int}")]
-
         public async Task<IActionResult> GetVisitById(int id)
         {
             try
@@ -88,12 +90,16 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPut("{id:int}")]
-
-        public async Task<IActionResult> UpdateVisit([FromBody] EditVisitDtoRequest updateVisit, int id)
+        public async Task<IActionResult> UpdateVisit(
+            [FromBody] EditVisitDtoRequest updateVisit,
+            int id
+        )
         {
             if (updateVisit == null)
             {
-                return BadRequest(new EditVisitDtoResponse() { Message = "i dati non sono corretti" });
+                return BadRequest(
+                    new EditVisitDtoResponse() { Message = "i dati non sono corretti" }
+                );
             }
             try
             {
@@ -101,14 +107,17 @@ namespace Veterinari_di_italia.Controllers
                 {
                     DataDellaVisita = updateVisit.DataDellaVisita,
                     EsameObiettivo = updateVisit.EsameObiettivo,
-                    Descrizione = updateVisit.Descrizione
+                    Descrizione = updateVisit.Descrizione,
+                    IdAnimale = Guid.Parse(updateVisit.IdAnagraficaAnimale),
                 };
                 var result = await _visiteservice.EditVisite(newVisit, id);
                 if (result)
                 {
                     return Ok(new EditVisitDtoResponse() { Message = "i dati sono corretti" });
                 }
-                return BadRequest(new EditVisitDtoResponse() { Message = "i dati non sono corretti" });
+                return BadRequest(
+                    new EditVisitDtoResponse() { Message = "i dati non sono corretti" }
+                );
             }
             catch (Exception ex)
             {
@@ -117,7 +126,6 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpDelete("{id:int}")]
-
         public async Task<IActionResult> DeleteVisit(int id)
         {
             try

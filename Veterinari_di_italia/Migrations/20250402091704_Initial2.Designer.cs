@@ -12,8 +12,8 @@ using Veterinari_di_italia.Data;
 namespace Veterinari_di_italia.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250401143707_Initial")]
-    partial class Initial
+    [Migration("20250402091704_Initial2")]
+    partial class Initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,21 +24,6 @@ namespace Veterinari_di_italia.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("FarmaciaVenditaFarmaco", b =>
-                {
-                    b.Property<Guid>("FarmaciaIdFarmaco")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("VenditaFarmacoIdVendita")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("FarmaciaIdFarmaco", "VenditaFarmacoIdVendita");
-
-                    b.HasIndex("VenditaFarmacoIdVendita");
-
-                    b.ToTable("FarmaciaVenditaFarmaco");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -336,6 +321,9 @@ namespace Veterinari_di_italia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("Farmaco")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -348,6 +336,27 @@ namespace Veterinari_di_italia.Migrations
                     b.HasIndex("VisiteVeterinarieId");
 
                     b.ToTable("Farmacias");
+                });
+
+            modelBuilder.Entity("Veterinari_di_italia.Models.FarmaciaVenditaFarmaco", b =>
+                {
+                    b.Property<Guid>("FarmaciaVenditaFarmacoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("FarmaciaIdFarmaco")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VenditaFarmacoIdVendita")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("FarmaciaVenditaFarmacoId");
+
+                    b.HasIndex("FarmaciaIdFarmaco");
+
+                    b.HasIndex("VenditaFarmacoIdVendita");
+
+                    b.ToTable("FarmaciaVenditaFarmaco");
                 });
 
             modelBuilder.Entity("Veterinari_di_italia.Models.GestioneRicoveri", b =>
@@ -425,9 +434,6 @@ namespace Veterinari_di_italia.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<Guid>("AnagraficaAnimaleIdAnimale")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("DataDellaVisita")
                         .HasColumnType("datetime2");
 
@@ -439,26 +445,14 @@ namespace Veterinari_di_italia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("IdAnimale")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AnagraficaAnimaleIdAnimale");
+                    b.HasIndex("IdAnimale");
 
                     b.ToTable("VisiteVeterinaries");
-                });
-
-            modelBuilder.Entity("FarmaciaVenditaFarmaco", b =>
-                {
-                    b.HasOne("Veterinari_di_italia.Models.Farmacia", null)
-                        .WithMany()
-                        .HasForeignKey("FarmaciaIdFarmaco")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Veterinari_di_italia.Models.VenditaFarmaco", null)
-                        .WithMany()
-                        .HasForeignKey("VenditaFarmacoIdVendita")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -540,6 +534,25 @@ namespace Veterinari_di_italia.Migrations
                         .HasForeignKey("VisiteVeterinarieId");
                 });
 
+            modelBuilder.Entity("Veterinari_di_italia.Models.FarmaciaVenditaFarmaco", b =>
+                {
+                    b.HasOne("Veterinari_di_italia.Models.Farmacia", "Farmaco")
+                        .WithMany("FarmaciaVenditaFarmaco")
+                        .HasForeignKey("FarmaciaIdFarmaco")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Veterinari_di_italia.Models.VenditaFarmaco", "VenditaFarmaco")
+                        .WithMany("FarmaciaVenditaFarmaco")
+                        .HasForeignKey("VenditaFarmacoIdVendita")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Farmaco");
+
+                    b.Navigation("VenditaFarmaco");
+                });
+
             modelBuilder.Entity("Veterinari_di_italia.Models.GestioneRicoveri", b =>
                 {
                     b.HasOne("Veterinari_di_italia.Models.AnagraficaAnimale", "AnagraficaAnimale")
@@ -564,7 +577,7 @@ namespace Veterinari_di_italia.Migrations
                 {
                     b.HasOne("Veterinari_di_italia.Models.AnagraficaAnimale", "AnagraficaAnimale")
                         .WithMany("visiteVeterinaries")
-                        .HasForeignKey("AnagraficaAnimaleIdAnimale")
+                        .HasForeignKey("IdAnimale")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -592,9 +605,19 @@ namespace Veterinari_di_italia.Migrations
                     b.Navigation("VenditaFarmaco");
                 });
 
+            modelBuilder.Entity("Veterinari_di_italia.Models.Farmacia", b =>
+                {
+                    b.Navigation("FarmaciaVenditaFarmaco");
+                });
+
             modelBuilder.Entity("Veterinari_di_italia.Models.TipologiaAnimale", b =>
                 {
                     b.Navigation("AnagraficaAnimale");
+                });
+
+            modelBuilder.Entity("Veterinari_di_italia.Models.VenditaFarmaco", b =>
+                {
+                    b.Navigation("FarmaciaVenditaFarmaco");
                 });
 
             modelBuilder.Entity("Veterinari_di_italia.Models.VisiteVeterinarie", b =>

@@ -31,7 +31,8 @@ namespace Veterinari_di_italia.Services
             {
                 var venditeList = await _context
                     .VenditaFarmaco.Include(v => v.Acquirente)
-                    .Include(v => v.Farmacia)
+                    .Include(v => v.FarmaciaVenditaFarmaco)
+                    .ThenInclude(fvf => fvf.Farmaco)
                     .ToListAsync();
 
                 return venditeList;
@@ -48,7 +49,8 @@ namespace Veterinari_di_italia.Services
             {
                 var vendita = await _context
                     .VenditaFarmaco.Include(v => v.Acquirente)
-                    .Include(v => v.Farmacia)
+                    .Include(v => v.FarmaciaVenditaFarmaco)
+                    .ThenInclude(fvf => fvf.Farmaco)
                     .FirstOrDefaultAsync(v => v.IdVendita.ToString() == venditaId);
 
                 return vendita;

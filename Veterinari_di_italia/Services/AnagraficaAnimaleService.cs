@@ -3,6 +3,7 @@ using Veterinari_di_italia.Data;
 using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.Farmacia;
+using Veterinari_di_italia.DTOs.FarmaciaVenditaFarmaco;
 using Veterinari_di_italia.DTOs.GestioneRicoveri;
 using Veterinari_di_italia.DTOs.TipoAnimale;
 using Veterinari_di_italia.DTOs.VenditaFarmaco;
@@ -41,7 +42,8 @@ namespace Veterinari_di_italia.Services
                     .Include(a => a.ProprietarioAnimale)
                     .Include(a => a.visiteVeterinaries)
                     .ThenInclude(vv => vv.Farmaci)
-                    .ThenInclude(vf => vf.VenditaFarmaco)
+                    .ThenInclude(vf => vf.FarmaciaVenditaFarmaco)
+                    .ThenInclude(fvf => fvf.VenditaFarmaco)
                     .Include(a => a.gestioneRicoveris)
                     .ToListAsync();
 
@@ -89,20 +91,26 @@ namespace Veterinari_di_italia.Services
                                                 Nome = f.Nome,
                                                 DittaFornitrice = f.DittaFornitrice,
                                                 ElencoUsi = f.ElencoUsi,
-                                                VenditaFarmaco =
-                                                    f.VenditaFarmaco.Count() > 0
-                                                        ? f
-                                                            .VenditaFarmaco.Select(
-                                                                vf => new VenditaFarmacoSimpleDto()
+                                                Farmaco = f.Farmaco,
+                                                FarmaciaVenditaFarmaco = f
+                                                    .FarmaciaVenditaFarmaco.Select(
+                                                        vf => new GetFarmacoFarmaciaVenditaFarmacoResponseDto()
+                                                        {
+                                                            VenditaFarmacoIdVendita =
+                                                                vf.VenditaFarmacoIdVendita,
+                                                            VenditaFarmaco =
+                                                                new VenditaFarmacoSimpleDto()
                                                                 {
-                                                                    IdVendita = vf.IdVendita,
+                                                                    IdVendita =
+                                                                        vf.VenditaFarmaco.IdVendita,
                                                                     NumeroRicetta =
-                                                                        vf.NumeroRicetta,
-                                                                    DataAcquisto = vf.DataAcquisto,
-                                                                }
-                                                            )
-                                                            .ToList()
-                                                        : null,
+                                                                        vf.VenditaFarmaco.NumeroRicetta,
+                                                                    DataAcquisto =
+                                                                        vf.VenditaFarmaco.DataAcquisto,
+                                                                },
+                                                        }
+                                                    )
+                                                    .ToList(),
                                             })
                                             .ToList()
                                         : null,
@@ -140,7 +148,7 @@ namespace Veterinari_di_italia.Services
                     .Include(a => a.ProprietarioAnimale)
                     .Include(a => a.visiteVeterinaries)
                     .ThenInclude(vv => vv.Farmaci)
-                    .ThenInclude(vf => vf.VenditaFarmaco)
+                    .ThenInclude(vf => vf.FarmaciaVenditaFarmaco)
                     .Include(a => a.gestioneRicoveris)
                     .FirstOrDefaultAsync(a => a.IdAnimale.ToString() == anagraficaId);
 
@@ -192,19 +200,26 @@ namespace Veterinari_di_italia.Services
                                             Nome = f.Nome,
                                             DittaFornitrice = f.DittaFornitrice,
                                             ElencoUsi = f.ElencoUsi,
-                                            VenditaFarmaco =
-                                                f.VenditaFarmaco.Count() > 0
-                                                    ? f
-                                                        .VenditaFarmaco.Select(
-                                                            vf => new VenditaFarmacoSimpleDto()
+                                            Farmaco = f.Farmaco,
+                                            FarmaciaVenditaFarmaco = f
+                                                .FarmaciaVenditaFarmaco.Select(
+                                                    vf => new GetFarmacoFarmaciaVenditaFarmacoResponseDto()
+                                                    {
+                                                        VenditaFarmacoIdVendita =
+                                                            vf.VenditaFarmacoIdVendita,
+                                                        VenditaFarmaco =
+                                                            new VenditaFarmacoSimpleDto()
                                                             {
-                                                                IdVendita = vf.IdVendita,
-                                                                NumeroRicetta = vf.NumeroRicetta,
-                                                                DataAcquisto = vf.DataAcquisto,
-                                                            }
-                                                        )
-                                                        .ToList()
-                                                    : null,
+                                                                IdVendita =
+                                                                    vf.VenditaFarmaco.IdVendita,
+                                                                NumeroRicetta =
+                                                                    vf.VenditaFarmaco.NumeroRicetta,
+                                                                DataAcquisto =
+                                                                    vf.VenditaFarmaco.DataAcquisto,
+                                                            },
+                                                    }
+                                                )
+                                                .ToList(),
                                         })
                                         .ToList()
                                     : null,
