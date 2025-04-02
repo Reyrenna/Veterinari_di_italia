@@ -44,6 +44,26 @@ namespace Veterinari_di_italia.Services
             }
         }
 
+        public async Task<List<GestioneRicoveri>?> GetAllRicoveriAttiviAsync()
+        {
+            try
+            {
+                var ricoveriList = await _context
+                    .GestioneRicoveris.Include(r => r.AnagraficaAnimale)
+                    .ThenInclude(a => a.Tipo)
+                    .Include(r => r.AnagraficaAnimale)
+                    .ThenInclude(a => a.ProprietarioAnimale)
+                    .Where(r => r.Ricoverato == true)
+                    .ToListAsync();
+
+                return ricoveriList;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<GestioneRicoveri?> GetRicoveroByIdAsync(string ricoveroId)
         {
             try
