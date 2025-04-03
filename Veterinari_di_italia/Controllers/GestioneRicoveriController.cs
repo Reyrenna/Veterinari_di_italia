@@ -328,11 +328,12 @@ namespace Veterinari_di_italia.Controllers
                             Nome = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Nome,
                             Cognome = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Cognome,
                             CodiceFiscale = ricoveriList
-                                .AnagraficaAnimale.ProprietarioAnimale.CodiceFiscale,
+                                .AnagraficaAnimale
+                                .ProprietarioAnimale
+                                .CodiceFiscale,
                             Email = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Email,
                         },
-
-                    }
+                    },
                 };
 
                 return Ok(
@@ -448,7 +449,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("RicercaRicoverato")]
-        public async Task <IActionResult> Ricerca(string NumeroMicroChip )
+        public async Task<IActionResult> Ricerca(string NumeroMicroChip)
         {
             if (NumeroMicroChip == "" && NumeroMicroChip == " ")
             {
@@ -456,8 +457,6 @@ namespace Veterinari_di_italia.Controllers
             }
 
             var animale = await _ricoveriService.RicercaPerMicroChip(NumeroMicroChip);
-
-           
 
             if (animale == null)
             {
@@ -491,23 +490,22 @@ namespace Veterinari_di_italia.Controllers
                         Email = animale.ProprietarioAnimale.Email,
                     },
 
-                    GestioneRicoveris = animale.gestioneRicoveris.Select(r => new GestioneRicoveriSimpleDto()
-                    {
-                        IdRicovero = r.IdRicovero,
-                        DataRicovero = r.DataRicovero,
-                        Ricoverato = r.Ricoverato,
-                        DescrizioneAnimale = r.DescrizioneAnimale,
-                    }).ToList(),
-
+                    GestioneRicoveris = animale
+                        .gestioneRicoveris.Select(r => new GestioneRicoveriSimpleDto()
+                        {
+                            IdRicovero = r.IdRicovero,
+                            DataRicovero = r.DataRicovero,
+                            Ricoverato = r.Ricoverato,
+                            DescrizioneAnimale = r.DescrizioneAnimale,
+                        })
+                        .ToList(),
                 };
-
+                return Ok(animaleDto);
             }
             catch
             {
                 return StatusCode(500);
             }
-
-            return Ok(animale);
         }
     }
 }
