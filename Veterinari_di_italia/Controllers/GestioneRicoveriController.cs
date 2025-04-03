@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Veterinari_di_italia.Data;
 using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.GestioneRicoveri;
@@ -443,6 +445,69 @@ namespace Veterinari_di_italia.Controllers
                         Message = "Qualcosa è andato storto!",
                     }
                 );
+        }
+
+        [HttpGet("RicercaRicoverato")]
+        public async Task <IActionResult> Ricerca(string NumeroMicroChip )
+        {
+            if (NumeroMicroChip == "" && NumeroMicroChip == " ")
+            {
+                return BadRequest("ID tipologia non valido.");
+            }
+
+            var animale = await _ricoveriService.RicercaPerMicroChip(NumeroMicroChip);
+
+           
+
+            if (animale == null)
+            {
+                return NotFound("Nessun animale trovato per questa tipologia.");
+            }
+
+            try
+            {
+                var animaleDto = new AnagraficaDto()
+                {
+                    IdAnimale = animale.IdAnimale,
+                    DataRegistrazione = animale.DataRegistrazione,
+                    Nome = animale.Nome,
+                    TipologiaId = animale.TipologiaId,
+                    Tipo = new TipologiaSimpleDto()
+                    {
+                        Id = animale.Tipo.Id,
+                        TipoAnimale = animale.Tipo.TipoAnimale,
+                    },
+                    Colore = animale.Colore,
+                    DataDiNascita = animale.DataDiNascita,
+                    PresenzaMicrochip = animale.PresenzaMicrochip,
+                    NumeroMicroChip = animale.NumeroMicroChip,
+                    ProprietarioId = animale.ProprietarioId,
+                    ProprietarioAnimale = new UserSimpleDto()
+                    {
+                        Id = animale.ProprietarioAnimale.Id,
+                        Nome = animale.ProprietarioAnimale.Nome,
+                        Cognome = animale.ProprietarioAnimale.Cognome,
+                        CodiceFiscale = animale.ProprietarioAnimale.CodiceFiscale,
+                        Email = animale.ProprietarioAnimale.Email,
+                    },
+
+                    GestioneRicoveris = animale.gestioneRicoveris.Select(r => new GestioneRicoveriSimpleDto()
+                    {
+                        IdRicovero = r.IdRicovero,
+                        DataRicovero = r.DataRicovero,
+                        Ricoverato = r.Ricoverato,
+                        DescrizioneAnimale = r.DescrizioneAnimale,
+                    }).ToList(),
+
+                };
+
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+
+            return Ok(animale);
         }
     }
 }

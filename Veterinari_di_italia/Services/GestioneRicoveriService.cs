@@ -166,5 +166,32 @@ namespace Veterinari_di_italia.Services
                 return false;
             }
         }
+
+        public async Task<AnagraficaAnimale?> RicercaPerMicroChip(string NumeroMicroChip)
+        {
+            try
+            {
+                var ricerca = await _context.AnagraficaAnimales
+                    .Include(x => x.Tipo)
+                    .Include(x => x.ProprietarioAnimale)
+                    .Include (x => x.gestioneRicoveris)
+                    .FirstOrDefaultAsync(a =>
+                a.NumeroMicroChip == NumeroMicroChip);
+
+                if (ricerca == null)
+                {
+                    return null;
+                }
+
+                return ricerca;
+               
+            }
+
+            catch
+            {
+                return null;
+            }
+
+        }
     }
 }
