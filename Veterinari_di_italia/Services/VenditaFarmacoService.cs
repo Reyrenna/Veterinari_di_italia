@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Veterinari_di_italia.Data;
 using Veterinari_di_italia.Models;
@@ -102,7 +103,9 @@ namespace Veterinari_di_italia.Services
         {
             try
             {
-                var vendita = await _context.VenditaFarmaco.FirstOrDefaultAsync(v =>
+                var vendita = await _context.VenditaFarmaco
+                    .Include(f => f.FarmaciaVenditaFarmaco)
+                    .FirstOrDefaultAsync(v =>
                     v.IdVendita.ToString() == venditaId
                 );
 
@@ -111,9 +114,17 @@ namespace Veterinari_di_italia.Services
                     return false;
                 }
 
+                foreach (var e in vendita.FarmaciaVenditaFarmaco)
+                {
+
+                    _context.FarmaciaVenditaFarmaco.Remove(e);
+
+                }
+
                 vendita.NumeroRicetta = venditaModificata.NumeroRicetta;
                 vendita.DataAcquisto = venditaModificata.DataAcquisto;
                 vendita.AcquirenteId = venditaModificata.AcquirenteId;
+                vendita.FarmaciaVenditaFarmaco = venditaModificata.FarmaciaVenditaFarmaco;
 
                 return await TrySaveAsync();
             }

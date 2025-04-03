@@ -142,7 +142,13 @@ namespace Veterinari_di_italia.Controllers
                     DataDellaVisita = updateVisit.DataDellaVisita,
                     EsameObiettivo = updateVisit.EsameObiettivo,
                     Descrizione = updateVisit.Descrizione,
-                    IdAnimale = Guid.Parse(updateVisit.IdAnagraficaAnimale),
+                    IdAnimale = updateVisit.IdAnagraficaAnimale,
+                    FarmaciaVisiteVeterinaries = updateVisit.Farmaco.Select(
+                        f => new FarmaciaVisiteVeterinarie()
+                        {
+                            FarmacoId = f.FarmaciaIdFarmaco,
+                        }
+                    ).ToList(),
                 };
                 var result = await _visiteservice.EditVisite(newVisit, id);
                 if (result)

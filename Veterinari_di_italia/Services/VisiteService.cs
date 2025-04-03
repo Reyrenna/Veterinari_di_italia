@@ -209,16 +209,26 @@ namespace Veterinari_di_italia.Services
         {
             try
             {
-                var Visita = await _context.VisiteVeterinaries.FirstOrDefaultAsync(a => a.Id == id);
+
+                var Visita = await _context.VisiteVeterinaries
+                    .Include(f => f.FarmaciaVisiteVeterinaries)
+                    .FirstOrDefaultAsync(a => a.Id == id);
                 if (Visita == null)
                 {
                     return false;
                 }
+
+                foreach (var e in Visita.FarmaciaVisiteVeterinaries) {
+
+                    _context.FarmaciaVisiteVeterinaries.Remove(e);
+
+                }
+
                 Visita.DataDellaVisita = visiteVeterinarie.DataDellaVisita;
                 Visita.EsameObiettivo = visiteVeterinarie.EsameObiettivo;
                 Visita.Descrizione = visiteVeterinarie.Descrizione;
                 Visita.FarmaciaVisiteVeterinaries = visiteVeterinarie.FarmaciaVisiteVeterinaries;
-                Visita.AnagraficaAnimale = visiteVeterinarie.AnagraficaAnimale;
+                Visita.IdAnimale = visiteVeterinarie.IdAnimale;
 
                 return await Saveasync();
             }

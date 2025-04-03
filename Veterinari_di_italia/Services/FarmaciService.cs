@@ -115,6 +115,7 @@ namespace Veterinari_di_italia.Services
                 FarmacoEsistente.Nome = createFarmaci.Nome;
                 FarmacoEsistente.DittaFornitrice = createFarmaci.DittaFornitrice;
                 FarmacoEsistente.ElencoUsi = createFarmaci.ElencoUsi;
+                FarmacoEsistente.Posizione = createFarmaci.Posizione;
                 return await SaveAsync();
             }
             catch (Exception ex)

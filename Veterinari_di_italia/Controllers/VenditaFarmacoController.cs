@@ -211,7 +211,7 @@ namespace Veterinari_di_italia.Controllers
             [FromBody] EditVenditaFarmacoRequestDto editVenditaFarmaco,
             string venditaId
         )
-        {
+        {  
             try
             {
                 var venditaModificata = new VenditaFarmaco()
@@ -219,6 +219,14 @@ namespace Veterinari_di_italia.Controllers
                     DataAcquisto = editVenditaFarmaco.DataAcquisto,
                     NumeroRicetta = editVenditaFarmaco.NumeroRicetta,
                     AcquirenteId = editVenditaFarmaco.AcquirenteId,
+                    FarmaciaVenditaFarmaco = editVenditaFarmaco
+                        .Farmaco.Select(f => new FarmaciaVenditaFarmaco()
+                        {
+                            FarmaciaIdFarmaco = f.FarmaciaIdFarmaco,
+                            VenditaFarmacoIdVendita = Guid.Parse(venditaId),
+                        })
+                        .ToList(),
+
                 };
 
                 var result = await _venditaService.EditVenditaByIdAsync(

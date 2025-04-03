@@ -40,6 +40,8 @@ namespace Veterinari_di_italia.Data
 
         public DbSet<FarmaciaVisiteVeterinarie> FarmaciaVisiteVeterinaries { get; set; }
 
+        public DbSet<FarmaciaVenditaFarmaco> FarmaciaVenditaFarmaco { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
