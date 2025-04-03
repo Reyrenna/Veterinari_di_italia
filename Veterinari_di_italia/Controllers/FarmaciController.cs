@@ -173,7 +173,11 @@ namespace Veterinari_di_italia.Controllers
                 var result = await _farmaciService.DeleteFarmaco(id);
                 if (result)
                 {
-                    return Ok();
+                    return Ok(
+                        new DeleteFarmaciResponseDTO()
+                        {
+                            Message = "Farmaco eliminato con successo!",
+                        });
                 }
                 return BadRequest(
                     new DeleteFarmaciResponseDTO()

@@ -2,7 +2,7 @@
 
 namespace Veterinari_di_italia.DTOs.GestioneRicoveri
 {
-    public class EditGestioneRicoveriResponsetDto
+    public class EditGestioneRicoveriResponseDto
     {
         [Required]
         public required string Message { get; set; }

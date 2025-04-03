@@ -7,6 +7,10 @@ namespace Veterinari_di_italia.DTOs.TipoAnimale
     {
         [Required]
 
+        public int Id { get; set; }
+
+        [Required]
+
         public string TipoAnimale { get; set; }
 
         [Required]

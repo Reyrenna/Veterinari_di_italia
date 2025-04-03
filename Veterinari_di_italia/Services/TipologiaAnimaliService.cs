@@ -51,6 +51,7 @@ namespace Veterinari_di_italia.Services
                 var tipologiaDTO = tipologia
                     .Select(x => new GetTipoAnimaleRequestDTO()
                     {
+                        Id = x.Id,
                         TipoAnimale = x.TipoAnimale,
                         AnagraficaAnimale = x.AnagraficaAnimale.Count > 0 ? x.AnagraficaAnimale.Select(aa => new AnagraficaSimpleDTO()
                         {
@@ -91,6 +92,7 @@ namespace Veterinari_di_italia.Services
                 }
                 var tipologiaDTO = new GetTipoAnimaleRequestDTO()
                 {
+                    Id = tipologia.Id,
                     TipoAnimale = tipologia.TipoAnimale,
                     AnagraficaAnimale = tipologia.AnagraficaAnimale.Count > 0 ? tipologia.AnagraficaAnimale.Select(aa => new AnagraficaSimpleDTO()
                     {

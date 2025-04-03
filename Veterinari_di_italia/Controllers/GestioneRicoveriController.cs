@@ -280,6 +280,73 @@ namespace Veterinari_di_italia.Controllers
             }
         }
 
+        [HttpGet("animale/{animaleId}")]
+        public async Task<IActionResult> GetRicoveriByAnimaleId(string animaleId)
+        {
+            try
+            {
+                var ricoveriList = await _ricoveriService.GetRicoveriByAnimaleIdAsync(animaleId);
+
+                if (ricoveriList == null)
+                {
+                    return BadRequest(
+                        new GetAllRicoveriResponseDto()
+                        {
+                            Message = "Qualcosa è andato storto!",
+                            Ricoveri = null,
+                        }
+                    );
+                }
+
+                var ricoveri = new GestioneRicoveriDto()
+                {
+                    IdRicovero = ricoveriList.IdRicovero,
+                    DataRicovero = ricoveriList.DataRicovero,
+                    Ricoverato = ricoveriList.Ricoverato,
+                    DescrizioneAnimale = ricoveriList.DescrizioneAnimale,
+                    IdAnimale = ricoveriList.IdAnimale,
+                    AnagraficaAnimale = new AnagraficaSimpleDTO()
+                    {
+                        DataRegistrazione = ricoveriList.AnagraficaAnimale.DataRegistrazione,
+                        Nome = ricoveriList.AnagraficaAnimale.Nome,
+                        TipologiaId = ricoveriList.AnagraficaAnimale.TipologiaId,
+                        Tipo = new TipologiaSimpleDto()
+                        {
+                            Id = ricoveriList.AnagraficaAnimale.Tipo.Id,
+                            TipoAnimale = ricoveriList.AnagraficaAnimale.Tipo.TipoAnimale,
+                        },
+                        Colore = ricoveriList.AnagraficaAnimale.Colore,
+                        DataDiNascita = ricoveriList.AnagraficaAnimale.DataDiNascita,
+                        PresenzaMicrochip = ricoveriList.AnagraficaAnimale.PresenzaMicrochip,
+                        NumeroMicroChip = ricoveriList.AnagraficaAnimale.NumeroMicroChip,
+                        ProprietarioId = ricoveriList.AnagraficaAnimale.ProprietarioId,
+                        ProprietarioAnimale = new UserSimpleDto()
+                        {
+                            Id = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Id,
+                            Nome = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Nome,
+                            Cognome = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Cognome,
+                            CodiceFiscale = ricoveriList
+                                .AnagraficaAnimale.ProprietarioAnimale.CodiceFiscale,
+                            Email = ricoveriList.AnagraficaAnimale.ProprietarioAnimale.Email,
+                        },
+
+                    }
+                };
+
+                return Ok(
+                    new GetAllRicoveriResponseDto()
+                    {
+                        Message = "Ricoveri trovati!",
+                        Ricoveri = new List<GestioneRicoveriDto> { ricoveri },
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(
             [FromBody] CreateGestioneRicoveriRequestDto createRicovero
@@ -340,13 +407,13 @@ namespace Veterinari_di_italia.Controllers
 
                 return result
                     ? Ok(
-                        new EditGestioneRicoveriResponsetDto()
+                        new EditGestioneRicoveriResponseDto()
                         {
                             Message = "Ricovero modificato con successo!",
                         }
                     )
                     : BadRequest(
-                        new EditGestioneRicoveriResponsetDto()
+                        new EditGestioneRicoveriResponseDto()
                         {
                             Message = "Qualcosa è andato storto!",
                         }
