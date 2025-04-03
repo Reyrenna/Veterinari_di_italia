@@ -142,7 +142,7 @@ namespace Veterinari_di_italia.Controllers
                 if (result)
                 {
                     return Ok(
-                        new GetFarmaciResponseDTO() { Message = "Modifica compiuta con successo" }
+                        new EditFarmaciResponseDTO() { Message = "Modifica compiuta con successo" }
                     );
                 }
                 return BadRequest(
@@ -188,6 +188,38 @@ namespace Veterinari_di_italia.Controllers
                     StatusCodes.Status500InternalServerError,
                     $"Errore durante l'eliminazione del farmaco: {ex.Message}"
                 );
+            }
+        }
+
+        [HttpGet("posizioneFarmaco/{farmacoId:guid}")]
+        public async Task<IActionResult> GetPosizioneFarmaco(Guid farmacoId)
+        {
+            try
+            {
+                var farmaco = await _farmaciService.GetFarmaciById(farmacoId);
+
+                if (farmaco == null)
+                {
+                    return BadRequest(
+                        new GetFarmacoPosizioneResponseDto()
+                        {
+                            Message = "Farmaco non trovato!",
+                            Posizione = null,
+                        }
+                    );
+                }
+
+                return Ok(
+                    new GetFarmacoPosizioneResponseDto()
+                    {
+                        Message = "Farmaco trovato!",
+                        Posizione = farmaco.Posizione,
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
     }
