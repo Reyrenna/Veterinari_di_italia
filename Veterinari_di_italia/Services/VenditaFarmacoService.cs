@@ -66,7 +66,6 @@ namespace Veterinari_di_italia.Services
         {
             try
             {
-
                 var venditeList = await _context
                     .VenditaFarmaco.Include(v => v.Acquirente)
                     .Include(v => v.FarmaciaVenditaFarmaco)
@@ -144,6 +143,45 @@ namespace Veterinari_di_italia.Services
             catch
             {
                 return false;
+            }
+        }
+
+        public async Task<List<Farmacia>?> GetAllFarmaciByFiscalCodeAsync(string codFiscale)
+        {
+            try
+            {
+                var venditeList = await _context
+                    .VenditaFarmaco.Include(v => v.Acquirente)
+                    .Include(v => v.FarmaciaVenditaFarmaco)
+                    .ThenInclude(fvf => fvf.Farmaco)
+                    .Where(v => v.Acquirente.CodiceFiscale == codFiscale)
+                    .ToListAsync();
+
+                if (venditeList.Count == 0)
+                {
+                    return null;
+                }
+
+                var farmaciList = new List<Farmacia>();
+
+                foreach (var vendita in venditeList)
+                {
+                    foreach (var farmaco in vendita.FarmaciaVenditaFarmaco)
+                    {
+                        // l'if serve per non far comparire più volte uno stesso farmaco acquistato
+                        // se si vuole avere i doppioni rimuovere il controllo if
+                        if (!farmaciList.Contains(farmaco.Farmaco))
+                        {
+                            farmaciList.Add(farmaco.Farmaco);
+                        }
+                    }
+                }
+
+                return farmaciList;
+            }
+            catch
+            {
+                return null;
             }
         }
     }
