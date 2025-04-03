@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Veterinari_di_italia.DTOs.AnagraficaAnimale;
+using Veterinari_di_italia.DTOs.Farmacia;
+using Veterinari_di_italia.DTOs.FarmaciaVisiteVeterinarie;
 using Veterinari_di_italia.DTOs.VisiteVeterinarie;
 using Veterinari_di_italia.Models;
 using Veterinari_di_italia.Services;
@@ -171,6 +174,78 @@ namespace Veterinari_di_italia.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("/allVisite/{idAnimale}")]
+        public async Task<IActionResult> GetAllVisiteByAnimalId(string idAnimale)
+        {
+            try
+            {
+                var visitsList = await _visiteservice.GetAllVisiteByAnimalIdAsync(idAnimale);
+
+                if (visitsList == null)
+                {
+                    return BadRequest(
+                        new GetAllVisiteByAnimalIdResponseDto()
+                        {
+                            Message = "Qualcosa è andato storto!",
+                            Visite = null,
+                        }
+                    );
+                }
+
+                var visitsDtoList = visitsList
+                    .Select(v => new VisiteVeterinarieSimpleDto()
+                    {
+                        Descrizione = v.Descrizione,
+                        EsameObiettivo = v.EsameObiettivo,
+                        DataDellaVisita = v.DataDellaVisita,
+                        Id = v.Id,
+                        Anagrafica = new AnagraficaSimpleDTO()
+                        {
+                            Nome = v.AnagraficaAnimale.Nome,
+                            Colore = v.AnagraficaAnimale.Colore,
+                            DataDiNascita = v.AnagraficaAnimale.DataDiNascita,
+                            DataRegistrazione = v.AnagraficaAnimale.DataRegistrazione,
+                            PresenzaMicrochip = v.AnagraficaAnimale.PresenzaMicrochip,
+                            NumeroMicroChip = v.AnagraficaAnimale.NumeroMicroChip,
+                            ProprietarioId = v.AnagraficaAnimale.ProprietarioId,
+                            TipologiaId = v.AnagraficaAnimale.TipologiaId,
+                        },
+                        FarmaciVisiteVeterinarie = v
+                            .FarmaciaVisiteVeterinaries.Select(
+                                fvv => new GetFarmaciFarmaciaVisiteVeterinarieDto()
+                                {
+                                    FarmacoId = fvv.FarmacoId,
+                                    Farmaco = new FarmaciaSimpleDto()
+                                    {
+                                        IdFarmaco = fvv.Farmaco.IdFarmaco,
+                                        Nome = fvv.Farmaco.Nome,
+                                        DittaFornitrice = fvv.Farmaco.DittaFornitrice,
+                                        ElencoUsi = fvv.Farmaco.ElencoUsi,
+                                        Farmaco = fvv.Farmaco.Farmaco,
+                                    },
+                                }
+                            )
+                            .ToList(),
+                    })
+                    .ToList();
+
+                var count = visitsDtoList.Count;
+
+                return Ok(
+                    new GetAllVisiteByAnimalIdResponseDto()
+                    {
+                        Message =
+                            count == 1 ? $"{count} visita trovata!" : $"{count} visite trovate!",
+                        Visite = visitsDtoList,
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
     }

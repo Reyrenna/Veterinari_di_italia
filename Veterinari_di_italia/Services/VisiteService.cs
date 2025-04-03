@@ -245,5 +245,26 @@ namespace Veterinari_di_italia.Services
                 return false;
             }
         }
+
+        public async Task<List<VisiteVeterinarie>?> GetAllVisiteByAnimalIdAsync(string idAnimale)
+        {
+            try
+            {
+                var visitsList = await _context
+                    .VisiteVeterinaries.Include(vv => vv.AnagraficaAnimale)
+                    .ThenInclude(a => a.Tipo)
+                    .Include(vv => vv.FarmaciaVisiteVeterinaries)
+                    .ThenInclude(fvv => fvv.Farmaco)
+                    .OrderByDescending(v => v.DataDellaVisita)
+                    .Where(v => v.IdAnimale.ToString() == idAnimale)
+                    .ToListAsync();
+
+                return visitsList;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

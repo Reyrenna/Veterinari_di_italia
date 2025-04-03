@@ -341,5 +341,52 @@ namespace Veterinari_di_italia.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("getAllFarmaci/{codFiscale}")]
+        public async Task<IActionResult> GetAllFarmaciByFiscalCode(string codFiscale)
+        {
+            try
+            {
+                var farmaciList = await _venditaService.GetAllFarmaciByFiscalCodeAsync(codFiscale);
+
+                if (farmaciList == null)
+                {
+                    return BadRequest(
+                        new GetListaFarmaciByFiscalCodeResponseDto()
+                        {
+                            Message = "Qualcosa è andato storto!",
+                            FiscalCode = null,
+                            Farmaci = null,
+                        }
+                    );
+                }
+
+                var farmaciDtoList = farmaciList
+                    .Select(f => new FarmaciaSimpleDto()
+                    {
+                        IdFarmaco = f.IdFarmaco,
+                        Nome = f.Nome,
+                        DittaFornitrice = f.DittaFornitrice,
+                        ElencoUsi = f.ElencoUsi,
+                        Farmaco = f.Farmaco,
+                    })
+                    .ToList();
+
+                var count = farmaciDtoList.Count;
+
+                return Ok(
+                    new GetListaFarmaciByFiscalCodeResponseDto()
+                    {
+                        Message = count == 1 ? "1 farmaco trovato!" : $"{count} farmaci trovati!",
+                        FiscalCode = codFiscale,
+                        Farmaci = farmaciDtoList,
+                    }
+                );
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }
