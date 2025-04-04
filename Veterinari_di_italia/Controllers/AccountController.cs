@@ -62,8 +62,8 @@ namespace Veterinari_di_italia.Controllers
 
                 var user = await _userManager.FindByEmailAsync(newUser.Email);
 
-                //await _userManager.AddToRoleAsync(newUser, "Admin");
-                await _userManager.AddToRoleAsync(newUser, "User");
+                await _userManager.AddToRoleAsync(newUser, "Admin");
+                //await _userManager.AddToRoleAsync(newUser, "User");
 
                 return Ok();
             }

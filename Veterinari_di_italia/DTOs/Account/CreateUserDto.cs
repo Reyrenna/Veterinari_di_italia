@@ -11,15 +11,15 @@ namespace Veterinari_di_italia.DTOs.Account
         public required string Cognome { get; set; }
 
         [Required]
-        //[EmailAddress]
+        [EmailAddress]
         public required string Email { get; set; }
 
-        //[Required]
-        //[Phone]
+        [Required]
+        [Phone]
         public required string Telefono { get; set; }
 
         [Required]
-        //[StringLength(16)]
+        [StringLength(16)]
         public required string CodiceFiscale { get; set; }
 
         [Required]
