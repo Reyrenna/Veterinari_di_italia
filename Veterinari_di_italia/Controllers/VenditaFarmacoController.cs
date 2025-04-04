@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Veterinari_di_italia.DTOs.Account;
 using Veterinari_di_italia.DTOs.Farmacia;
@@ -21,6 +22,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -97,6 +99,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("{venditaId}")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetVendita(string venditaId)
         {
             try
@@ -161,6 +164,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Farmacista, Admin")]
         public async Task<IActionResult> Create(
             [FromBody] CreateVenditaFarmacoRequestDto createVenditaFarmaco
         )
@@ -207,11 +211,12 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPut("{venditaId}")]
+        [Authorize(Roles = "Farmacista, Admin")]
         public async Task<IActionResult> Edit(
             [FromBody] EditVenditaFarmacoRequestDto editVenditaFarmaco,
             string venditaId
         )
-        {  
+        {
             try
             {
                 var venditaModificata = new VenditaFarmaco()
@@ -226,7 +231,6 @@ namespace Veterinari_di_italia.Controllers
                             VenditaFarmacoIdVendita = Guid.Parse(venditaId),
                         })
                         .ToList(),
-
                 };
 
                 var result = await _venditaService.EditVenditaByIdAsync(
@@ -255,6 +259,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpDelete("{venditaId}")]
+        [Authorize(Roles = "Farmacista, Admin")]
         public async Task<IActionResult> Delete(string venditaId)
         {
             var result = await _venditaService.DeleteByIdAsync(venditaId);
@@ -272,6 +277,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("data/{DataRichiesta}")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetByDate(DateTime DataRichiesta)
         {
             try

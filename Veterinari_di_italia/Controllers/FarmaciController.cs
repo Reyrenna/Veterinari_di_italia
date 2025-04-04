@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Veterinari_di_italia.DTOs.Farmaci;
 using Veterinari_di_italia.Models;
@@ -18,6 +19,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> Create([FromBody] CreateFarmaciDTO createFarmaciDTO)
         {
             if (createFarmaciDTO == null)
@@ -60,6 +62,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetFarmaci()
         {
             if (!ModelState.IsValid)
@@ -87,6 +90,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetFarmaciById(Guid id)
         {
             if (!ModelState.IsValid)
@@ -114,6 +118,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Farmacista, Admin")]
         public async Task<IActionResult> UpdateFarmaco(
             Guid id,
             [FromBody] CreateFarmaciDTO createFarmaciDTO
@@ -162,6 +167,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Farmacista, Admin")]
         public async Task<IActionResult> DeleteFarmaci(Guid id)
         {
             if (!ModelState.IsValid)
@@ -177,7 +183,8 @@ namespace Veterinari_di_italia.Controllers
                         new DeleteFarmaciResponseDTO()
                         {
                             Message = "Farmaco eliminato con successo!",
-                        });
+                        }
+                    );
                 }
                 return BadRequest(
                     new DeleteFarmaciResponseDTO()
@@ -196,6 +203,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("posizioneFarmaco/{farmacoId:guid}")]
+        [Authorize(Roles = "Farmacista, Admin")]
         public async Task<IActionResult> GetPosizioneFarmaco(Guid farmacoId)
         {
             try

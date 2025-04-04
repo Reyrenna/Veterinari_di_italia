@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Veterinari_di_italia.Data;
@@ -23,6 +24,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -116,6 +118,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("/ricoveriAttivi")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetAllRicoveriAttivi()
         {
             try
@@ -209,6 +212,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("ricovero/{ricoveroId}")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetRicovero(string ricoveroId)
         {
             try
@@ -283,6 +287,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("animale/{animaleId}")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> GetRicoveriByAnimaleId(string animaleId)
         {
             try
@@ -351,6 +356,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> Create(
             [FromBody] CreateGestioneRicoveriRequestDto createRicovero
         )
@@ -388,6 +394,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPut("{ricoveroId}")]
+        [Authorize(Roles = "Farmacista, Veterinario, Admin")]
         public async Task<IActionResult> Edit(
             [FromBody] EditGestioneRicoveriRequestDto editRicovero,
             string ricoveroId
@@ -429,6 +436,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpDelete("{ricoveroId}")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> Delete(string ricoveroId)
         {
             var result = await _ricoveriService.DeleteById(ricoveroId);

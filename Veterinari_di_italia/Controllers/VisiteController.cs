@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.DTOs.Farmacia;
@@ -22,6 +23,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> CreateVisit([FromBody] CreateVisitDtoRequest createVisit)
         {
             if (createVisit == null)
@@ -88,6 +90,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -106,6 +109,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> GetVisitById(int id)
         {
             try
@@ -124,6 +128,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> UpdateVisit(
             [FromBody] EditVisitDtoRequest updateVisit,
             int id
@@ -143,12 +148,12 @@ namespace Veterinari_di_italia.Controllers
                     EsameObiettivo = updateVisit.EsameObiettivo,
                     Descrizione = updateVisit.Descrizione,
                     IdAnimale = updateVisit.IdAnagraficaAnimale,
-                    FarmaciaVisiteVeterinaries = updateVisit.Farmaco.Select(
-                        f => new FarmaciaVisiteVeterinarie()
+                    FarmaciaVisiteVeterinaries = updateVisit
+                        .Farmaco.Select(f => new FarmaciaVisiteVeterinarie()
                         {
                             FarmacoId = f.FarmaciaIdFarmaco,
-                        }
-                    ).ToList(),
+                        })
+                        .ToList(),
                 };
                 var result = await _visiteservice.EditVisite(newVisit, id);
                 if (result)
@@ -166,6 +171,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> DeleteVisit(int id)
         {
             try
