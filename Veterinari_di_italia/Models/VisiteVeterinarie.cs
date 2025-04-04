@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Veterinari_di_italia.Models
 {
@@ -9,13 +10,19 @@ namespace Veterinari_di_italia.Models
 
         [Required]
         public DateTime DataDellaVisita { get; set; }
-        [Required]
-        public string EsameObiettivo { get; set; }
-        [Required]
-        public string Descrizione { get; set; }
 
-        public ICollection<Farmacia> Farmaci { get; set; }
+        [Required]
+        public required string EsameObiettivo { get; set; }
 
+        [Required]
+        public required string Descrizione { get; set; }
+
+        [Required]
+        public required Guid IdAnimale { get; set; }
+
+        public List<FarmaciaVisiteVeterinarie>? FarmaciaVisiteVeterinaries { get; set; }
+
+        [ForeignKey(nameof(IdAnimale))]
         public AnagraficaAnimale AnagraficaAnimale { get; set; }
     }
 }

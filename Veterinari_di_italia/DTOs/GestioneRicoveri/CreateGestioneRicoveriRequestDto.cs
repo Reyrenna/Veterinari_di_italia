@@ -1,13 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Veterinari_di_italia.Models
+namespace Veterinari_di_italia.DTOs.GestioneRicoveri
 {
-    public class GestioneRicoveri
+    public class CreateGestioneRicoveriRequestDto
     {
-        [Key]
-        public int IdRicovero { get; set; }
-
         [Required]
         public DateTime DataRicovero { get; set; }
 
@@ -19,10 +15,5 @@ namespace Veterinari_di_italia.Models
 
         [Required]
         public required Guid IdAnimale { get; set; }
-
-        // navigazione
-
-        [ForeignKey(nameof(IdAnimale))]
-        public AnagraficaAnimale? AnagraficaAnimale { get; set; }
     }
 }

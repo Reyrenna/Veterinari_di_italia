@@ -6,15 +6,24 @@ namespace Veterinari_di_italia.Models
     {
         [Key]
         public Guid IdFarmaco { get; set; }
-        [Required]
-        public string Nome { get; set; }
-        [Required]
-        public string DittaFornitrice { get; set; }
 
         [Required]
-        public string ElencoUsi { get; set; }
+        public required string Nome { get; set; }
 
-        public ICollection<VenditaFarmaco> VenditaFarmaco { get;set; }
+        [Required]
+        public required string DittaFornitrice { get; set; }
 
+        [Required]
+        public required string ElencoUsi { get; set; }
+
+        [Required]
+        public required bool Farmaco { get; set; }
+
+        [Required]
+        public required string Posizione { get; set; }
+
+        public List<FarmaciaVenditaFarmaco>? FarmaciaVenditaFarmaco { get; set; }
+
+        public List<FarmaciaVisiteVeterinarie>? FarmaciaVisiteVeterinaries { get; set; }
     }
 }

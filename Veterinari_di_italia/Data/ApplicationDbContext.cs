@@ -18,6 +18,8 @@ namespace Veterinari_di_italia.Data
             IdentityUserToken<string>
         >
     {
+        internal object AnagraficheAnimali;
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
@@ -35,6 +37,10 @@ namespace Veterinari_di_italia.Data
         public DbSet<ApplicationUserRole> ApplicationUserRoles { get; set; }
 
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
+
+        public DbSet<FarmaciaVisiteVeterinarie> FarmaciaVisiteVeterinaries { get; set; }
+
+        public DbSet<FarmaciaVenditaFarmaco> FarmaciaVenditaFarmaco { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -77,15 +83,24 @@ namespace Veterinari_di_italia.Data
                 .HasOne(dc => dc.ProprietarioAnimale)
                 .WithMany(dc => dc.AnagraficaAnimale)
                 .HasForeignKey(dc => dc.ProprietarioId);
+
             builder
                 .Entity<ApplicationUser>()
                 .HasMany(dc => dc.AnagraficaAnimale)
                 .WithOne(dc => dc.ProprietarioAnimale);
 
             builder
+                .Entity<ApplicationUser>()
+                .HasMany(au => au.VenditaFarmaco)
+                .WithOne(vf => vf.Acquirente)
+                .HasForeignKey(vf => vf.AcquirenteId);
+
+            builder
                 .Entity<AnagraficaAnimale>()
                 .HasMany(ln => ln.gestioneRicoveris)
-                .WithOne(ln => ln.AnagraficaAnimale);
+                .WithOne(ln => ln.AnagraficaAnimale)
+                .HasForeignKey(ln => ln.IdAnimale);
+
             builder
                 .Entity<GestioneRicoveri>()
                 .HasOne(ln => ln.AnagraficaAnimale)
@@ -95,11 +110,30 @@ namespace Veterinari_di_italia.Data
                 .Entity<ApplicationUser>()
                 .HasMany(fi => fi.VenditaFarmaco)
                 .WithOne(fi => fi.Acquirente);
+
             builder
-                .Entity<VenditaFarmaco>()
-                .HasMany(fi => fi.Farmacia)
-                .WithMany(fi => fi.VenditaFarmaco);
-            builder.Entity<Farmacia>().HasMany(fi => fi.VenditaFarmaco).WithMany(fi => fi.Farmacia);
+                .Entity<FarmaciaVenditaFarmaco>()
+                .HasOne(fvf => fvf.Farmaco)
+                .WithMany(f => f.FarmaciaVenditaFarmaco)
+                .HasForeignKey(fvf => fvf.FarmaciaIdFarmaco);
+
+            builder
+                .Entity<FarmaciaVenditaFarmaco>()
+                .HasOne(fvf => fvf.VenditaFarmaco)
+                .WithMany(vf => vf.FarmaciaVenditaFarmaco)
+                .HasForeignKey(fvf => fvf.VenditaFarmacoIdVendita);
+
+            builder
+                .Entity<FarmaciaVisiteVeterinarie>()
+                .HasOne(fvv => fvv.Visita)
+                .WithMany(v => v.FarmaciaVisiteVeterinaries)
+                .HasForeignKey(vff => vff.VisitaId);
+
+            builder
+                .Entity<FarmaciaVisiteVeterinarie>()
+                .HasOne(fvv => fvv.Farmaco)
+                .WithMany(f => f.FarmaciaVisiteVeterinaries)
+                .HasForeignKey(fvv => fvv.FarmacoId);
 
             builder
                 .Entity<ApplicationRole>()
@@ -117,6 +151,13 @@ namespace Veterinari_di_italia.Data
                         Name = "Veterinario",
                         NormalizedName = "VETERINARIO",
                         ConcurrencyStamp = "0e2d5024-c38d-4c5f-b16c-a2b493ce42f5",
+                    },
+                    new ApplicationRole()
+                    {
+                        Id = "c7ef7bd0-60ab-4652-8025-f4b217cfe45d",
+                        Name = "Farmacista",
+                        NormalizedName = "FARMACISTA",
+                        ConcurrencyStamp = "c7ef7bd0-60ab-4652-8025-f4b217cfe45d",
                     },
                     new ApplicationRole()
                     {

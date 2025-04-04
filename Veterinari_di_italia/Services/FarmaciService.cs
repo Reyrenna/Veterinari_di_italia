@@ -9,6 +9,7 @@ namespace Veterinari_di_italia.Services
     public class FarmaciService
     {
         private readonly ApplicationDbContext _context;
+
         public FarmaciService(ApplicationDbContext context)
         {
             _context = context;
@@ -25,7 +26,7 @@ namespace Veterinari_di_italia.Services
                 return false;
             }
         }
-       
+
         public async Task<bool> CreateFarmaci(Farmacia createfarmaci)
         {
             try
@@ -37,9 +38,7 @@ namespace Veterinari_di_italia.Services
             {
                 return false;
             }
-            
         }
-
 
         public async Task<List<Farmacia>?> GetFarmaci()
         {
@@ -57,7 +56,9 @@ namespace Veterinari_di_italia.Services
         {
             try
             {
-                var FarmacoEsistente = await _context.Farmacias.FirstOrDefaultAsync(x => x.IdFarmaco == id);
+                var FarmacoEsistente = await _context.Farmacias.FirstOrDefaultAsync(x =>
+                    x.IdFarmaco == id
+                );
 
                 if (FarmacoEsistente == null)
                 {
@@ -69,7 +70,8 @@ namespace Veterinari_di_italia.Services
                     IdFarmaco = FarmacoEsistente.IdFarmaco,
                     Nome = FarmacoEsistente.Nome,
                     DittaFornitrice = FarmacoEsistente.DittaFornitrice,
-                    ElencoUsi = FarmacoEsistente.ElencoUsi
+                    ElencoUsi = FarmacoEsistente.ElencoUsi,
+                    Posizione = FarmacoEsistente.Posizione,
                 };
                 return FarmacoDTO;
             }
@@ -83,7 +85,9 @@ namespace Veterinari_di_italia.Services
         {
             try
             {
-                var FarmacoEsistente = await _context.Farmacias.FirstOrDefaultAsync(x => x.IdFarmaco == id);
+                var FarmacoEsistente = await _context.Farmacias.FirstOrDefaultAsync(x =>
+                    x.IdFarmaco == id
+                );
                 if (FarmacoEsistente == null)
                 {
                     return false;
@@ -101,7 +105,9 @@ namespace Veterinari_di_italia.Services
         {
             try
             {
-                var FarmacoEsistente = await _context.Farmacias.FirstOrDefaultAsync(x => x.IdFarmaco == id);
+                var FarmacoEsistente = await _context.Farmacias.FirstOrDefaultAsync(x =>
+                    x.IdFarmaco == id
+                );
                 if (FarmacoEsistente == null)
                 {
                     return false;
@@ -109,6 +115,7 @@ namespace Veterinari_di_italia.Services
                 FarmacoEsistente.Nome = createFarmaci.Nome;
                 FarmacoEsistente.DittaFornitrice = createFarmaci.DittaFornitrice;
                 FarmacoEsistente.ElencoUsi = createFarmaci.ElencoUsi;
+                FarmacoEsistente.Posizione = createFarmaci.Posizione;
                 return await SaveAsync();
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Veterinari_di_italia.DTOs.AnagraficaAnimale;
 using Veterinari_di_italia.Models;
@@ -18,6 +19,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> GetAll()
         {
             var anagraficheList = await _anagraficaAnimaleService.GetAllAsync();
@@ -48,6 +50,7 @@ namespace Veterinari_di_italia.Controllers
 
         // TODO completare
         [HttpGet("anagrafica/{anagraficaId}")]
+        [Authorize(Roles = "User, Veterinario, Admin")]
         public async Task<IActionResult> GetAnagrafica(string anagraficaId)
         {
             var anagraficaFound = await _anagraficaAnimaleService.GetByIdAsync(anagraficaId);
@@ -70,6 +73,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> Create(
             [FromBody] CreateAnagraficaRequestDto createAnagrafica
         )
@@ -101,6 +105,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpPut("anagraficaId")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> Edit(
             [FromBody] EditAnagraficaRequestDto editAnagrafica,
             string anagraficaId
@@ -145,6 +150,7 @@ namespace Veterinari_di_italia.Controllers
         }
 
         [HttpDelete("delete/{anagraficaId}")]
+        [Authorize(Roles = "Veterinario, Admin")]
         public async Task<IActionResult> Delete(string anagraficaId)
         {
             var result = await _anagraficaAnimaleService.DeleteById(anagraficaId);
